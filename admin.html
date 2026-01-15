@@ -60,7 +60,7 @@
       }
 
       try {
-        const response = await fetch(`http://localhost:5001/api/contacts?password=${encodeURIComponent(password)}`);
+        const response = await fetch(`https://portfolio-xs63.onrender.com/api/contacts?password=${encodeURIComponent(password)}`);
         const data = await response.json();
 
         const loadingDiv = document.getElementById('loading');
