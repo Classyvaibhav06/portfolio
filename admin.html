@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Messages</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: #0a0a0a;
+      color: #fafafa;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+
+<body class="p-8">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-yellow-400">Admin Dashboard</h1>
+      <button onclick="location.reload()"
+        class="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 rounded text-sm">Refresh</button>
+    </div>
+
+    <div id="error-msg" class="hidden bg-red-500/10 border border-red-500 text-red-500 p-4 rounded mb-6"></div>
+
+    <div class="overflow-x-auto bg-neutral-900 rounded-lg border border-neutral-800">
+      <table class="w-full text-left text-sm text-neutral-400">
+        <thead class="bg-neutral-800 text-yellow-400 uppercase">
+          <tr>
+            <th class="px-6 py-3">Date</th>
+            <th class="px-6 py-3">Name</th>
+            <th class="px-6 py-3">Email</th>
+            <th class="px-6 py-3">Subject</th>
+            <th class="px-6 py-3">Message</th>
+          </tr>
+        </thead>
+        <tbody id="table-body" class="divide-y divide-neutral-800">
+          <!-- Data will be inserted here -->
+        </tbody>
+      </table>
+      <div id="loading" class="text-center py-8">Loading data...</div>
+      <div id="no-data" class="hidden text-center py-8">No messages found.</div>
+    </div>
+  </div>
+
+  <script>
+    async function fetchData() {
+      const password = prompt("Enter Admin Password:");
+
+      if (!password) {
+        document.getElementById('loading').textContent = "Password required to view data.";
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:5001/api/contacts?password=${encodeURIComponent(password)}`);
+        const data = await response.json();
+
+        const loadingDiv = document.getElementById('loading');
+        const tableBody = document.getElementById('table-body');
+        const errorMsg = document.getElementById('error-msg');
+        const noDataDiv = document.getElementById('no-data');
+
+        loadingDiv.classList.add('hidden');
+
+        if (!data.success) {
+          errorMsg.textContent = data.msg || "Access Denied";
+          errorMsg.classList.remove('hidden');
+          return;
+        }
+
+        if (data.contacts.length === 0) {
+          noDataDiv.classList.remove('hidden');
+          return;
+        }
+
+        data.contacts.forEach(contact => {
+          const date = new Date(contact.date).toLocaleString();
+          const row = `
+                        <tr class="hover:bg-neutral-800/50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap text-neutral-500">${date}</td>
+                            <td class="px-6 py-4 font-bold text-white">${escapeHtml(contact.name)}</td>
+                            <td class="px-6 py-4">
+                                <a href="mailto:${escapeHtml(contact.email)}" class="text-yellow-400 hover:underline">${escapeHtml(contact.email)}</a>
+                            </td>
+                            <td class="px-6 py-4">${escapeHtml(contact.subject)}</td>
+                            <td class="px-6 py-4 max-w-xs truncate" title="${escapeHtml(contact.message)}">${escapeHtml(contact.message)}</td>
+                        </tr>
+                    `;
+          tableBody.innerHTML += row;
+        });
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById('loading').textContent = "Failed to connect to server.";
+      }
+    }
+
+    // Simple security to prevent XSS
+    function escapeHtml(text) {
+      if (!text) return "";
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    fetchData();
+  </script>
+</body>
+
+</html>

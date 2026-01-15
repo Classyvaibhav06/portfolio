@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vaibhav-portfolio</title>
+    <title>Vaibhav-</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -934,6 +934,10 @@
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                     Email
                 </a>
+                <a href="admin.html" class="text-neutral-400 hover:text-yellow-400 transition-colors flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    Admin
+                </a>
             </div>
             <p class="text-neutral-500 text-xs font-mono">© 2025 Vaibhav Ghoshi. All rights reserved.</p>
             <p class="text-neutral-600 text-xs font-mono mt-2">engineered for engineering 👨‍🔧</p>
@@ -1199,6 +1203,49 @@ Total: 18 repositories on GitHub`,
                         behavior: 'smooth'
                     });
                 }
+            });
+        });
+
+        // Contact Form Submission
+        const contactForm = document.getElementById('contact-form');
+        const formStatus = document.getElementById('form-status');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+
+            const formData = { name, email, subject, message };
+
+            formStatus.classList.remove('hidden');
+            formStatus.textContent = 'Sending...';
+            formStatus.classList.remove('text-green-400', 'text-red-400');
+
+            fetch('http://localhost:5001/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    formStatus.textContent = 'Message sent successfully!';
+                    formStatus.classList.add('text-green-400');
+                    contactForm.reset();
+                } else {
+                    formStatus.textContent = 'Something went wrong. Please try again.';
+                    formStatus.classList.add('text-red-400');
+                }
+            })
+            .catch(err => {
+                formStatus.textContent = 'An error occurred. Please try again later.';
+                formStatus.classList.add('text-red-400');
+                console.error('Error:', err);
             });
         });
     </script>
