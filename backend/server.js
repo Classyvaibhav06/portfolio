@@ -44,24 +44,51 @@ const ContactSchema = new mongoose.Schema({
 // Create a model from the schema
 const Contact = mongoose.model("Contact", ContactSchema);
 
+const https = require("https");
+
+// ... (existing code) ...
+
 // API endpoint to handle form submission
 app.post("/api/contact", async (req, res) => {
-  try {
-    const newContact = new Contact({
-      name: req.body.name,
-      email: req.body.email,
-      subject: req.body.subject,
-      message: req.body.message,
+  const { name, email, subject, message } = req.body;
+  const recaptchaResponse = req.body["g-recaptcha-response"];
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY || "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"; // Use environment variable for secret key
+
+  const verificationURL = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${recaptchaResponse}&remoteip=${req.connection.remoteAddress}`;
+
+  https.get(verificationURL, (verificationRes) => {
+    let data = "";
+
+    verificationRes.on("data", (chunk) => {
+      data += chunk;
     });
 
-    const contact = await newContact.save();
-    res.json({ success: true, msg: "Message sent successfully!", contact });
-  } catch (err) {
-    res
-      .status(400)
-      .json({ success: false, msg: "Failed to send message.", err });
-  }
+    verificationRes.on("end", async () => {
+      try {
+        const verificationResult = JSON.parse(data);
+        if (verificationResult.success) {
+          const newContact = new Contact({
+            name,
+            email,
+            subject,
+            message,
+          });
+
+          const contact = await newContact.save();
+          res.json({ success: true, msg: "Message sent successfully!", contact });
+        } else {
+          res.status(400).json({ success: false, msg: "reCAPTCHA verification failed." });
+        }
+      } catch (err) {
+        res.status(400).json({ success: false, msg: "Failed to send message.", err });
+      }
+    });
+  }).on("error", (e) => {
+    console.error(e);
+    res.status(500).json({ success: false, msg: "Something went wrong with reCAPTCHA verification." });
+  });
 });
+
 
 // API endpoint to get all contacts (Protected)
 app.get("/api/contacts", async (req, res) => {
@@ -75,6 +102,26 @@ app.get("/api/contacts", async (req, res) => {
   try {
     const contacts = await Contact.find().sort({ date: -1 });
     res.json({ success: true, contacts });
+  } catch (err) {
+    res.status(500).json({ success: false, msg: "Server Error", err });
+  }
+});
+
+// API endpoint to delete a contact (Protected)
+app.delete("/api/contacts/:id", async (req, res) => {
+  const { password } = req.body;
+  const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+
+  if (password !== adminPassword) {
+    return res.status(401).json({ success: false, msg: "Unauthorized access" });
+  }
+
+  try {
+    const contact = await Contact.findByIdAndDelete(req.params.id);
+    if (!contact) {
+      return res.status(404).json({ success: false, msg: "Contact not found" });
+    }
+    res.json({ success: true, msg: "Contact deleted successfully" });
   } catch (err) {
     res.status(500).json({ success: false, msg: "Server Error", err });
   }

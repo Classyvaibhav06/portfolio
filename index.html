@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vaibhav Ghoshi | Full Stack Developer Portfolio</title>
+    <title>Vaibhav-Ghoshi | Full Stack Developer Portfolio</title>
     <meta name="description"
         content="Official portfolio of Vaibhav Ghoshi. Explore my projects, skills in React and Node.js, and professional experience.">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -263,6 +263,7 @@
             }
         }
     </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body class="grid-bg scanline">
@@ -972,14 +973,14 @@
                             <label for="name" class="block text-sm font-mono text-yellow-400 mb-2">Name</label>
                             <input type="text" id="name" name="name" required
                                 class="w-full px-4 py-3 bg-neutral-900 border-2 border-neutral-800 rounded-lg text-white focus:border-yellow-400 focus:outline-none transition-colors font-mono"
-                                placeholder="John Doe" />
+                                placeholder="your name" />
                         </div>
 
                         <div>
                             <label for="email" class="block text-sm font-mono text-yellow-400 mb-2">Email</label>
                             <input type="email" id="email" name="email" required
                                 class="w-full px-4 py-3 bg-neutral-900 border-2 border-neutral-800 rounded-lg text-white focus:border-yellow-400 focus:outline-none transition-colors font-mono"
-                                placeholder="john@example.com" />
+                                placeholder="name@.com" />
                         </div>
 
                         <div>
@@ -995,6 +996,8 @@
                                 class="w-full px-4 py-3 bg-neutral-900 border-2 border-neutral-800 rounded-lg text-white focus:border-yellow-400 focus:outline-none transition-colors font-mono resize-none"
                                 placeholder="Tell me about your project..."></textarea>
                         </div>
+
+                        <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
 
                         <button type="submit"
                             class="w-full px-8 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all hover:scale-105 glow-yellow-strong font-mono">
@@ -1387,8 +1390,16 @@ Total: 18 repositories on GitHub`,
             const email = document.getElementById('email').value;
             const subject = document.getElementById('subject').value;
             const message = document.getElementById('message').value;
+            const recaptchaResponse = grecaptcha.getResponse();
 
-            const formData = { name, email, subject, message };
+            if (!recaptchaResponse) {
+                formStatus.classList.remove('hidden');
+                formStatus.textContent = 'Please complete the reCAPTCHA.';
+                formStatus.classList.add('text-red-400');
+                return;
+            }
+
+            const formData = { name, email, subject, message, 'g-recaptcha-response': recaptchaResponse };
 
             formStatus.classList.remove('hidden');
             formStatus.textContent = 'Sending...';
@@ -1407,8 +1418,9 @@ Total: 18 repositories on GitHub`,
                         formStatus.textContent = 'Message sent successfully!';
                         formStatus.classList.add('text-green-400');
                         contactForm.reset();
+                        grecaptcha.reset();
                     } else {
-                        formStatus.textContent = 'Something went wrong. Please try again.';
+                        formStatus.textContent = data.msg || 'Something went wrong. Please try again.';
                         formStatus.classList.add('text-red-400');
                     }
                 })

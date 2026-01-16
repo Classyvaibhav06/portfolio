@@ -39,6 +39,7 @@
             <th class="px-6 py-3">Email</th>
             <th class="px-6 py-3">Subject</th>
             <th class="px-6 py-3">Message</th>
+            <th class="px-6 py-3">Delete</th>
           </tr>
         </thead>
         <tbody id="table-body" class="divide-y divide-neutral-800">
@@ -84,7 +85,7 @@
         data.contacts.forEach(contact => {
           const date = new Date(contact.date).toLocaleString();
           const row = `
-                        <tr class="hover:bg-neutral-800/50 transition-colors">
+                        <tr class="hover:bg-neutral-800/50 transition-colors" id="contact-${contact._id}">
                             <td class="px-6 py-4 whitespace-nowrap text-neutral-500">${date}</td>
                             <td class="px-6 py-4 font-bold text-white">${escapeHtml(contact.name)}</td>
                             <td class="px-6 py-4">
@@ -92,6 +93,9 @@
                             </td>
                             <td class="px-6 py-4">${escapeHtml(contact.subject)}</td>
                             <td class="px-6 py-4 max-w-xs truncate" title="${escapeHtml(contact.message)}">${escapeHtml(contact.message)}</td>
+                            <td class="px-6 py-4">
+                                <button class="text-red-500 hover:underline" onclick="deleteContact('${contact._id}')">Delete</button>
+                            </td>
                         </tr>
                     `;
           tableBody.innerHTML += row;
@@ -112,6 +116,37 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+    }
+
+    async function deleteContact(id) {
+        const password = prompt("Enter Admin Password to delete:");
+        if (!password) return;
+
+        try {
+            const response = await fetch(`https://portfolio-xs63.onrender.com/api/contacts/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ password: password })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                const row = document.getElementById(`contact-${id}`);
+                row.remove();
+            } else {
+                const errorMsg = document.getElementById('error-msg');
+                errorMsg.textContent = data.msg || "Failed to delete contact.";
+                errorMsg.classList.remove('hidden');
+            }
+        } catch (err) {
+            console.error(err);
+            const errorMsg = document.getElementById('error-msg');
+            errorMsg.textContent = "Failed to connect to server.";
+            errorMsg.classList.remove('hidden');
+        }
     }
 
     fetchData();
