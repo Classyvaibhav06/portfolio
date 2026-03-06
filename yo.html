@@ -23,6 +23,11 @@
             box-sizing: border-box;
         }
 
+        .f1 {
+            font-family: 'Pixelify Sans', sans-serif;
+            font-weight: 900;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background: #0a0a0a;
@@ -35,12 +40,22 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Grid Background */
+        /* Enhanced Grid Background with Animation */
         .grid-bg {
             background-image:
                 repeating-linear-gradient(0deg, transparent, transparent 39px, #1f1f1f 39px, #1f1f1f 40px),
                 repeating-linear-gradient(90deg, transparent, transparent 39px, #1f1f1f 39px, #1f1f1f 40px);
             background-size: 40px 40px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 40px 40px;
+            }
         }
 
         /* Scanline Effect */
@@ -61,7 +76,7 @@
             opacity: 0.1;
         }
 
-        /* Custom Cursor */
+        /* Custom Cursor with Trail Effect */
         .cursor-ring {
             position: fixed;
             width: 32px;
@@ -85,177 +100,333 @@
             transform: translate(-50%, -50%);
         }
 
-        /* Glow Effect */
-        .glow-yellow {
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3),
-                0 0 40px rgba(251, 191, 36, 0.15);
-        }
-
-        .glow-yellow-strong {
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5),
-                0 0 40px rgba(251, 191, 36, 0.3),
-                0 0 60px rgba(251, 191, 36, 0.15);
-        }
-
-        /* Animations */
-        @keyframes pulse-glow {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        @keyframes slide-up {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes bounce-subtle {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        .animate-pulse-glow {
-            animation: pulse-glow 2s ease-in-out infinite;
-        }
-
-        .animate-slide-up {
-            animation: slide-up 0.6s ease-out forwards;
-        }
-
-        .animate-bounce-subtle {
-            animation: bounce-subtle 2s ease-in-out infinite;
-        }
-
-        /* Skill Card */
+        /* Enhanced Skill Card with Advanced Hover Effects */
         .skill-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+
+        /* Animated Border Effect */
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #facc15, #fbbf24, #f59e0b, #facc15);
+            background-size: 400%;
+            border-radius: 0.75rem;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s ease;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .skill-card:hover::before {
+            opacity: 1;
         }
 
         .skill-card:hover {
-            transform: scale(1.03);
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(251, 191, 36, 0.3);
         }
 
-        /* Project Card */
-        .project-card {
-            transition: all 0.3s ease;
-            border: 1px solid #1f1f1f;
+        /* Glowing Icon Effect */
+        .skill-card .skill-icon {
+            transition: all 0.4s ease;
             position: relative;
+            display: inline-block;
+        }
+
+        .skill-card:hover .skill-icon {
+            transform: scale(1.2) rotate(10deg);
+            filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.8));
+        }
+
+        /* Progress Bar Animation */
+        .progress-bar-fill {
+            transition: width 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Enhanced Project Card */
+        .project-card {
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+
+        .project-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.2), transparent);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: 0;
+        }
+
+        .project-card:hover::after {
+            width: 500px;
+            height: 500px;
         }
 
         .project-card:hover {
-            border-color: #facc15;
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(251, 191, 36, 0.2);
         }
 
-        /* Photo Frame Corners */
+        .project-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Enhanced Frame Corners with Animation */
         .frame-corner {
             position: absolute;
             width: 30px;
             height: 30px;
             border: 3px solid #facc15;
+            transition: all 0.4s ease;
         }
 
         .frame-corner.top-left {
-            top: 1px;
-            left: 1px;
+            top: -3px;
+            left: -3px;
             border-right: none;
             border-bottom: none;
         }
 
         .frame-corner.top-right {
-            top: 1px;
-            right: 1px;
+            top: -3px;
+            right: -3px;
             border-left: none;
             border-bottom: none;
         }
 
         .frame-corner.bottom-left {
-            bottom: 1px;
-            left: 1px;
+            bottom: -3px;
+            left: -3px;
             border-right: none;
             border-top: none;
         }
 
         .frame-corner.bottom-right {
-            bottom: 1px;
-            right: 1px;
+            bottom: -3px;
+            right: -3px;
             border-left: none;
             border-top: none;
         }
 
-        /* Responsive Grid Adjustments */
-        @media (max-width: 768px) {
-            .skill-card:hover {
-                transform: scale(1.02);
-            }
-
-            .frame-corner {
-                width: 15px;
-                height: 15px;
-            }
+        .project-card:hover .frame-corner.top-left {
+            top: 8px;
+            left: 8px;
         }
 
-        /* Terminal */
-        .terminal {
+        .project-card:hover .frame-corner.top-right {
+            top: 8px;
+            right: 8px;
+        }
+
+        .project-card:hover .frame-corner.bottom-left {
+            bottom: 8px;
+            left: 8px;
+        }
+
+        .project-card:hover .frame-corner.bottom-right {
+            bottom: 8px;
+            right: 8px;
+        }
+
+        /* Achievement Badge with Pulse */
+        .achievement-badge {
+            position: relative;
             transition: all 0.3s ease;
         }
 
-        .terminal.minimized {
-            height: 40px;
+        .achievement-badge::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #facc15;
+            border-radius: 0.75rem;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .achievement-badge:hover::before {
+            width: 110%;
+            height: 110%;
+            opacity: 1;
+            animation: pulse-ring 1.5s ease-out infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .achievement-badge:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* Enhanced Button Hover Effects */
+        .btn-primary {
+            position: relative;
             overflow: hidden;
+            z-index: 1;
         }
 
-        /* Mobile Menu */
-        .mobile-menu {
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: -1;
         }
 
-        .mobile-menu.active {
-            transform: translateX(0);
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
-        /* Hide scrollbar but keep functionality */
-        ::-webkit-scrollbar {
-            width: 8px;
+        /* Text Gradient Animation */
+        .text-gradient {
+            background: linear-gradient(45deg, #facc15, #fbbf24, #f59e0b);
+            background-size: 200%;
+            /* -webkit-background-clip: text; */
+            -webkit-text-fill-color: transparent; 
+            animation: gradientText 3s ease infinite;
         }
 
-        ::-webkit-scrollbar-track {
-            background: #0a0a0a;
+        @keyframes gradientText {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
         }
 
-        ::-webkit-scrollbar-thumb {
+        /* Enhanced Filter Buttons */
+        .filter-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
             background: #facc15;
-            border-radius: 4px;
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
         }
 
-        .font-Pixelify {
-            font-family: 'Pixelify Sans', sans-serif;
+        .filter-btn:hover::after {
+            width: 80%;
         }
 
         /* Smooth Scroll */
         html {
             scroll-behavior: smooth;
+        }
+
+        /* Timeline Glow Effect */
+        .timeline-dot {
+            position: relative;
+        }
+
+        .timeline-dot::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: #facc15;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            animation: pulse-glow 2s ease-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Enhanced Mobile Menu */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
         }
 
         @media (max-width: 640px) {
@@ -269,77 +440,85 @@
             }
         }
 
-        .text-3d-effect {
+        /* XP Bar Enhancement */
+        .xp-bar-container {
             position: relative;
-            color: #facc15;
-            z-index: 1;
-
+            overflow: visible;
         }
 
-        .text-3d-effect::before {
-            content: "Vaibhav";
-            position: absolute;
-            top: 13px;
-            left: 4px;
-            color: #1d6063;
-            z-index: -1;
-            -webkit-text-stroke: .5px #ceff08;
-        }
-
-        .text-3d-effect1 {
+        .xp-bar {
             position: relative;
-            color: #facc15;
-            z-index: 1;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
         }
 
-        .text-3d-effect1::before {
-            content: "Ghoshi";
+        .xp-bar::after {
+            content: '';
             position: absolute;
-            top: 13px;
-            left: 4px;
-            color: #1d6063;
-            z-index: -1;
-            -webkit-text-stroke: .5px #ceff08;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
         }
 
-        /* //responsiveness */
-
-        @media screen and (max-width: 768px) {
-
-
-            .text-3d-effect::before {
-                content: "Vaibhav";
-                position: absolute;
-                top: 2px;
-                left: 2px;
-                color: #1d6063;
-                z-index: -1;
-                -webkit-text-stroke: .5px #ceff08;
+        /* Floating Animation for Icons */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
             }
-
-            .text-3d-effect1 {
-                position: relative;
-                color: #facc15;
-                z-index: 1;
-                font-size: 4rem;
+            50% {
+                transform: translateY(-10px);
             }
+        }
 
-            .text-3d-effect1::before {
-                content: "Ghoshi";
-                position: absolute;
-                top: 2px;
-                left: 2px;
-                color: #1d6063;
-                z-index: -1;
-                -webkit-text-stroke: .5px #ceff08;
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
 
-            }
+        /* Link Hover Effect */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
 
-            .text-3d-effect {
-                position: relative;
-                color: #facc15;
-                z-index: 1;
-                font-size: 4rem;}
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #facc15;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        /* Card Shine Effect */
+        .card-shine {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-shine::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .card-shine:hover::before {
+            left: 100%;
+            opacity: 1;
         }
     </style>
 </head>
@@ -736,44 +915,31 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" id="projects-grid">
                 <!-- Project 1 - Flying Modi Game -->
-                <div class="project-card bg-neutral-900 rounded-md overflow-hidden md:col-span-2 md:row-span-2 group relative"
-                    data-category="web">
-                    <!-- Frame Corners -->
+                 <div class="project-card bg-neutral-900 rounded-lg overflow-hidden group relative">
                     <div class="frame-corner top-left"></div>
                     <div class="frame-corner top-right"></div>
                     <div class="frame-corner bottom-left"></div>
                     <div class="frame-corner bottom-right"></div>
 
-                    <div
-                        class="aspect-video bg-gradient-to-br from-yellow-400/20 to-neutral-900 flex items-center justify-center relative overflow-hidden">
-                        <div class="text-8xl opacity-20">🎮</div>
-                        <div
-                            class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-60 transition-opacity flex items-center justify-center gap-4">
-                            <img class="w-[100%] z-[-1] absolute h-[100%]"
-                                src="brave_screenshot_modi-flyin.netlify.app.png" alt="">
-                            <a href="https://modi-flyin.netlify.app/" target="_blank"
-                                class="px-4 z-3 py-2 bg-yellow-400 text-black rounded font-semibold hover:bg-yellow-500 transition-all">View
-                                Demo</a>
-
+                    <div class="aspect-video bg-gradient-to-br from-yellow-400/20 to-neutral-900 flex items-center justify-center relative overflow-hidden">
+                        <div class="text-6xl opacity-20 float-animation">🎮</div>
+                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-2">
+                            <button class="btn-primary px-3 py-2 bg-yellow-400 text-black rounded text-sm font-semibold hover:bg-yellow-500">View Demo</button>
                         </div>
                     </div>
-                    <div class="p-6">
+                    <div class="p-4">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="text-xs px-2 py-1 bg-yellow-400/20 text-yellow-400 rounded">GAME</span>
-                            <span class="text-xs text-neutral-500 font-mono">★ 2</span>
                         </div>
-                        <h3 class="text-2xl font-bold mb-2 group-hover:text-yellow-400 transition-colors">Flying Modi
-                            Game</h3>
-                        <p class="text-neutral-400 mb-4">Trending flying Modi game recreated with JavaScript. Fun
-                            browser-based game with smooth animations and interactive gameplay mechanics.</p>
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-yellow-400 transition-colors">Flying Modi Game</h3>
+                        <p class="text-neutral-400 text-sm mb-3">Trending flying Modi game recreated with JavaScript</p>
                         <div class="flex flex-wrap gap-2">
                             <span class="px-2 py-1 bg-neutral-800 text-yellow-400 text-xs rounded">JavaScript</span>
                             <span class="px-2 py-1 bg-neutral-800 text-yellow-400 text-xs rounded">HTML5</span>
-                            <span class="px-2 py-1 bg-neutral-800 text-yellow-400 text-xs rounded">Canvas</span>
-                            <span class="px-2 py-1 bg-neutral-800 text-yellow-400 text-xs rounded">Game Dev</span>
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Project 2 - DSA with CPP -->
                 <div class="project-card bg-neutral-900 rounded-md overflow-hidden group relative" data-category="oss">

@@ -12,6 +12,19 @@ app.use(cors());
 // MongoDB Connection
 const dbURI = process.env.MONGO_URI || "mongodb://localhost:27017/portfolio"; // Replace with your MongoDB connection string
 
+const { initRag, handleChat } = require("./rag");
+initRag();
+
+app.post("/api/chat", async (req, res) => {
+  const { message } = req.body;
+  if (!message) {
+    return res.status(400).json({ error: "Message is required" });
+  }
+
+  const reply = await handleChat(message);
+  res.json({ reply });
+});
+
 mongoose
   .connect(dbURI)
   .then(() => console.log("MongoDB connected..."))
