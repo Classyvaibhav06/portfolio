@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme inline {
+  --animate-shadanim: shadanim 15s linear infinite;
+}
+
+
+@keyframes shadanim {
+  0% {
+    background-position: 100% -100%;
+  }
+}

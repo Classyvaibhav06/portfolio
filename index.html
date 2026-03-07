@@ -144,14 +144,63 @@
 
         .animate-pulse-glow {
             animation: pulse-glow 2s ease-in-out infinite;
+            will-change: opacity;
+            transform: translateZ(0);
         }
 
         .animate-slide-up {
             animation: slide-up 0.6s ease-out forwards;
+            will-change: opacity, transform;
+            transform: translateZ(0);
         }
 
         .animate-bounce-subtle {
             animation: bounce-subtle 2s ease-in-out infinite;
+            will-change: transform;
+            transform: translateZ(0);
+        }
+
+        @keyframes shadanim {
+            0% {
+                background-position: 100% -100%;
+            }
+        }
+
+        .name-pattern-effect {
+            position: relative;
+            display: inline-block;
+            font-weight: bold;
+            text-shadow: 0.02em 0.02em 0 #0a0a0a;
+            white-space: nowrap;
+        }
+
+        /* Mobile specific adjustments to font size to avoid absolute horizontal overflow */
+
+        .name-pattern-effect::after {
+            content: attr(data-shadow);
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            z-index: -10;
+            white-space: nowrap;
+            width: max-content;
+            background-size: 0.05em 0.05em;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: none;
+            background-image: linear-gradient(45deg, transparent 45%, #facc15 45%, #facc15 55%, transparent 0);
+            animation: shadanim 15s linear infinite;
+            will-change: background-position;
+            transform: translateZ(0);
+            /* Hardware accelerate pattern */
+        }
+
+        @media (max-width: 640px) {
+            .name-pattern-effect::after {
+                top: 2px;
+                left: 2px;
+            }
         }
 
         /* Skill Card - Pixel Glow Style */
@@ -513,9 +562,11 @@
         <div class="max-w-7xl mx-auto text-center w-full">
             <div class="text-yellow-400 text-xs sm:text-sm font-mono mb-4 opacity-0 animate-slide-up"
                 style="animation-delay: 0.2s">// Welcome to my digital realm</div>
-            <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-4 sm:mb-6 opacity-0 animate-slide-up leading-tight"
+            <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-4 sm:mb-6 opacity-0 animate-slide-up leading-tight flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4"
                 style="animation-delay: 0.4s">
-                Hi, I'm <span class="font-Pixelify f1 text-yellow-400">Vaibhav Ghoshi</span>
+                <span>Hi, I'm</span>
+                <span class="font-Pixelify f1 text-yellow-400 name-pattern-effect" data-shadow="Vaibhav Ghoshi">Vaibhav
+                    Ghoshi</span>
             </h1>
             <div class="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-neutral-400 mb-6 sm:mb-8 font-mono opacity-0 animate-slide-up"
                 style="animation-delay: 0.6s">
