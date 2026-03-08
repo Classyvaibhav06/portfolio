@@ -18,484 +18,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap"
         rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        .f1 {
-            font-family: 'pixelify sans', sans-serif;
-
-            font-weight: 900;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #0a0a0a;
-            color: #fafafa;
-            overflow-x: hidden;
-            cursor: none;
-        }
-
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Grid Background */
-        .grid-bg {
-            background-image:
-                repeating-linear-gradient(0deg, transparent, transparent 39px, #1f1f1f 39px, #1f1f1f 40px),
-                repeating-linear-gradient(90deg, transparent, transparent 39px, #1f1f1f 39px, #1f1f1f 40px);
-            background-size: 40px 40px;
-        }
-
-        /* Scanline Effect */
-        .scanline::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(0deg,
-                    rgba(0, 0, 0, 0.1),
-                    rgba(0, 0, 0, 0.1) 1px,
-                    transparent 1px,
-                    transparent 2px);
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.1;
-        }
-
-        /* Custom Cursor */
-        .cursor-ring {
-            position: fixed;
-            width: 32px;
-            height: 32px;
-            border: 2px solid #facc15;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10000;
-            transition: transform 0.1s ease-out, width 0.2s, height 0.2s;
-            transform: translate(-50%, -50%);
-        }
-
-        .cursor-dot {
-            position: fixed;
-            width: 8px;
-            height: 8px;
-            background: #facc15;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10001;
-            transform: translate(-50%, -50%);
-        }
-
-        /* Glow Effect */
-        .glow-yellow {
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3),
-                0 0 40px rgba(251, 191, 36, 0.15);
-        }
-
-        .glow-yellow-strong {
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5),
-                0 0 40px rgba(251, 191, 36, 0.3),
-                0 0 60px rgba(251, 191, 36, 0.15);
-        }
-
-        /* Animations */
-        @keyframes pulse-glow {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        @keyframes slide-up {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes bounce-subtle {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        .animate-pulse-glow {
-            animation: pulse-glow 2s ease-in-out infinite;
-            will-change: opacity;
-            transform: translateZ(0);
-        }
-
-        .animate-slide-up {
-            animation: slide-up 0.6s ease-out forwards;
-            will-change: opacity, transform;
-            transform: translateZ(0);
-        }
-
-        .animate-bounce-subtle {
-            animation: bounce-subtle 2s ease-in-out infinite;
-            will-change: transform;
-            transform: translateZ(0);
-        }
-
-        @keyframes shadanim {
-            0% {
-                background-position: 100% -100%;
-            }
-        }
-
-        .name-pattern-effect {
-            position: relative;
-            display: inline-block;
-            font-weight: bold;
-            text-shadow: 0.02em 0.02em 0 #0a0a0a;
-            white-space: nowrap;
-        }
-
-        /* Mobile specific adjustments to font size to avoid absolute horizontal overflow */
-
-        .name-pattern-effect::after {
-            content: attr(data-shadow);
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            z-index: -10;
-            white-space: nowrap;
-            width: max-content;
-            background-size: 0.05em 0.05em;
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            text-shadow: none;
-            background-image: linear-gradient(45deg, transparent 45%, #facc15 45%, #facc15 55%, transparent 0);
-            animation: shadanim 15s linear infinite;
-            will-change: background-position;
-            transform: translateZ(0);
-            /* Hardware accelerate pattern */
-        }
-
-        @media (max-width: 640px) {
-            .name-pattern-effect::after {
-                top: 2px;
-                left: 2px;
-            }
-        }
-
-        /* Skill Card - Pixel Glow Style */
-        .skill-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            background: #111;
-            border: 2px solid #333;
-            border-radius: 4px;
-            image-rendering: pixelated;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .skill-card::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border: 2px solid transparent;
-            border-radius: 6px;
-            pointer-events: none;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .skill-card:hover {
-            transform: translateY(-6px);
-            border-color: #facc15;
-            box-shadow:
-                0 0 8px #facc15,
-                0 0 16px rgba(250, 204, 21, 0.5),
-                0 0 32px rgba(250, 204, 21, 0.25),
-                0 0 64px rgba(250, 204, 21, 0.1),
-                inset 0 0 15px rgba(250, 204, 21, 0.05);
-        }
-
-        .skill-card:hover::before {
-            border-color: rgba(250, 204, 21, 0.3);
-            box-shadow: 0 0 12px rgba(250, 204, 21, 0.15);
-        }
-
-        .skill-card .skill-icon {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #1a1a1a;
-            border: 2px solid #333;
-            border-radius: 4px;
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-            image-rendering: pixelated;
-        }
-
-        .skill-card:hover .skill-icon {
-            border-color: #facc15;
-            box-shadow: 0 0 7px rgba(250, 204, 21, 0.4);
-            background: #1f1a00;
-        }
-
-        /* Pixel Progress Bar */
-        .skill-progress-bar {
-            position: relative;
-            overflow: hidden;
-            border-radius: 2px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-        }
-
-        .skill-progress-bar .bar-fill {
-            height: 100%;
-            border-radius: 1px;
-            position: relative;
-            transition: width 1s steps(20);
-            width: 0%;
-            image-rendering: pixelated;
-        }
-
-        .bar-fill.glow-gold {
-            background: repeating-linear-gradient(90deg, #facc15 0px, #facc15 4px, #f59e0b 4px, #f59e0b 8px);
-            box-shadow: 0 0 6px rgba(250, 204, 21, 0.5);
-        }
-
-        .bar-fill.glow-silver {
-            background: repeating-linear-gradient(90deg, #a3a3a3 0px, #a3a3a3 4px, #737373 4px, #737373 8px);
-            box-shadow: 0 0 6px rgba(163, 163, 163, 0.4);
-        }
-
-        .bar-fill.glow-bronze {
-            background: repeating-linear-gradient(90deg, #f59e0b 0px, #f59e0b 4px, #d97706 4px, #d97706 8px);
-            box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
-        }
-
-        .skill-progress-bar .bar-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-            animation: pixel-shimmer 3s steps(8) infinite;
-        }
-
-        @keyframes pixel-shimmer {
-            0% {
-                transform: translateX(-100%);
-            }
-
-            100% {
-                transform: translateX(200%);
-            }
-        }
-
-        /* Rank Badges - Pixel Style */
-        .skill-card .rank-badge {
-            font-family: 'Pixelify Sans', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 2px;
-            text-transform: uppercase;
-            image-rendering: pixelated;
-        }
-
-        .rank-gold {
-            background: #1f1a00;
-            color: #facc15;
-            border: 2px solid #facc15;
-            box-shadow: 0 0 8px rgba(250, 204, 21, 0.3);
-            animation: pixel-pulse-gold 2s steps(4) infinite;
-        }
-
-        .rank-silver {
-            background: #1a1a1a;
-            color: #d4d4d4;
-            border: 2px solid #a3a3a3;
-            box-shadow: 0 0 6px rgba(163, 163, 163, 0.2);
-            animation: pixel-pulse-silver 2.5s steps(4) infinite;
-        }
-
-        .rank-bronze {
-            background: #1a1200;
-            color: #f59e0b;
-            border: 2px solid #d97706;
-            box-shadow: 0 0 6px rgba(217, 119, 6, 0.25);
-            animation: pixel-pulse-bronze 2.2s steps(4) infinite;
-        }
-
-        @keyframes pixel-pulse-gold {
-
-            0%,
-            100% {
-                box-shadow: 0 0 6px rgba(250, 204, 21, 0.2);
-            }
-
-            50% {
-                box-shadow: 0 0 14px rgba(250, 204, 21, 0.6), 0 0 20px rgba(250, 204, 21, 0.2);
-            }
-        }
-
-        @keyframes pixel-pulse-silver {
-
-            0%,
-            100% {
-                box-shadow: 0 0 4px rgba(163, 163, 163, 0.15);
-            }
-
-            50% {
-                box-shadow: 0 0 10px rgba(163, 163, 163, 0.4), 0 0 16px rgba(163, 163, 163, 0.15);
-            }
-        }
-
-        @keyframes pixel-pulse-bronze {
-
-            0%,
-            100% {
-                box-shadow: 0 0 4px rgba(217, 119, 6, 0.15);
-            }
-
-            50% {
-                box-shadow: 0 0 10px rgba(217, 119, 6, 0.45), 0 0 16px rgba(217, 119, 6, 0.15);
-            }
-        }
-
-        /* Project Card */
-        .project-card {
-            transition: all 0.3s ease;
-            border: 1px solid #1f1f1f;
-            position: relative;
-        }
-
-        .project-card:hover {
-            border-color: #facc15;
-            transform: translateY(-5px);
-        }
-
-        /* Photo Frame Corners */
-        .frame-corner {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            border: 3px solid #facc15;
-        }
-
-        .frame-corner.top-left {
-            top: 1px;
-            left: 1px;
-            border-right: none;
-            border-bottom: none;
-        }
-
-        .frame-corner.top-right {
-            top: 1px;
-            right: 1px;
-            border-left: none;
-            border-bottom: none;
-        }
-
-        .frame-corner.bottom-left {
-            bottom: 1px;
-            left: 1px;
-            border-right: none;
-            border-top: none;
-        }
-
-        .frame-corner.bottom-right {
-            bottom: 1px;
-            right: 1px;
-            border-left: none;
-            border-top: none;
-        }
-
-        /* Responsive Grid Adjustments */
-        @media (max-width: 768px) {
-            .skill-card:hover {
-                transform: scale(1.02);
-            }
-
-            .frame-corner {
-                width: 15px;
-                height: 15px;
-            }
-        }
-
-        /* Terminal */
-        .terminal {
-            transition: all 0.3s ease;
-        }
-
-        .terminal.minimized {
-            height: 40px;
-            overflow: hidden;
-        }
-
-        /* Mobile Menu */
-        .mobile-menu {
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .mobile-menu.active {
-            transform: translateX(0);
-        }
-
-        /* Hide scrollbar but keep functionality */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #0a0a0a;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #facc15;
-            border-radius: 4px;
-        }
-
-        /* Smooth Scroll */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        @media (max-width: 640px) {
-            body {
-                cursor: default;
-            }
-
-            .cursor-ring,
-            .cursor-dot {
-                display: none;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
@@ -529,13 +52,37 @@
                     </path>
                 </svg>
             </button>
-            <nav class="hidden sm:flex gap-4 lg:gap-6 text-xs sm:text-sm">
-                <a href="#hero" class="text-neutral-400 hover:text-yellow-400 transition-colors">Home</a>
-                <a href="#skills" class="text-neutral-400 hover:text-yellow-400 transition-colors">Skills</a>
-                <a href="#experience" class="text-neutral-400 hover:text-yellow-400 transition-colors">Experience</a>
-                <a href="#projects" class="text-neutral-400 hover:text-yellow-400 transition-colors">Projects</a>
-                <a href="#achievements"
-                    class="text-neutral-400 hover:text-yellow-400 transition-colors">Achievements</a>
+            <nav class="hidden sm:flex gap-5 lg:gap-7 items-center">
+                <a href="#hero" class="nav-link">
+                    <span class="bracket-l">«</span>
+                    <span class="link-text">Home</span>
+                    <span class="bracket-r">»</span>
+                    <span class="active-dot"></span>
+                </a>
+                <a href="#skills" class="nav-link">
+                    <span class="bracket-l">«</span>
+                    <span class="link-text">Skills</span>
+                    <span class="bracket-r">»</span>
+                    <span class="active-dot"></span>
+                </a>
+                <a href="#experience" class="nav-link">
+                    <span class="bracket-l">«</span>
+                    <span class="link-text">Experience</span>
+                    <span class="bracket-r">»</span>
+                    <span class="active-dot"></span>
+                </a>
+                <a href="#projects" class="nav-link">
+                    <span class="bracket-l">«</span>
+                    <span class="link-text">Projects</span>
+                    <span class="bracket-r">»</span>
+                    <span class="active-dot"></span>
+                </a>
+                <a href="#achievements" class="nav-link">
+                    <span class="bracket-l">«</span>
+                    <span class="link-text">Achievements</span>
+                    <span class="bracket-r">»</span>
+                    <span class="active-dot"></span>
+                </a>
             </nav>
         </div>
     </div>
@@ -544,25 +91,51 @@
     <div
         class="mobile-menu fixed top-16 right-0 bottom-0 w-64 bg-neutral-900 border-l border-yellow-400 z-40 sm:hidden">
         <nav class="flex flex-col p-6 gap-4">
-            <a href="#hero"
-                class="text-neutral-400 hover:text-yellow-400 transition-colors text-lg mobile-link">Home</a>
-            <a href="#skills"
-                class="text-neutral-400 hover:text-yellow-400 transition-colors text-lg mobile-link">Skills</a>
-            <a href="#experience"
-                class="text-neutral-400 hover:text-yellow-400 transition-colors text-lg mobile-link">Experience</a>
-            <a href="#projects"
-                class="text-neutral-400 hover:text-yellow-400 transition-colors text-lg mobile-link">Projects</a>
-            <a href="#achievements"
-                class="text-neutral-400 hover:text-yellow-400 transition-colors text-lg mobile-link">Achievements</a>
+            <a href="#hero" class="mobile-nav-link mobile-link">› Home</a>
+            <a href="#skills" class="mobile-nav-link mobile-link">› Skills</a>
+            <a href="#experience" class="mobile-nav-link mobile-link">› Experience</a>
+            <a href="#projects" class="mobile-nav-link mobile-link">› Projects</a>
+            <a href="#achievements" class="mobile-nav-link mobile-link">› Achievements</a>
         </nav>
     </div>
 
     <!-- Hero Section -->
-    <section id="hero" class="min-h-screen flex items-center justify-center relative pt-0 sm:pt-2 px-4">
-        <div class="max-w-7xl mx-auto text-center w-full">
+    <section id="hero" class="min-h-screen flex items-center justify-center relative pt-0 sm:pt-2 px-4 overflow-hidden">
+        <!-- Shooting Stars Background -->
+        <div class="shooting-stars-bg">
+            <div class="radial-glow"></div>
+            <div class="static-stars"></div>
+        </div>
+        <!-- Shooting Star SVG Layers -->
+        <svg id="shooting-svg-1" class="shooting-star-svg" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="star-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#2EB9DF;stop-opacity:0" />
+                    <stop offset="100%" style="stop-color:#9E00FF;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+        </svg>
+        <svg id="shooting-svg-2" class="shooting-star-svg" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="star-grad-2" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#FFB800;stop-opacity:0" />
+                    <stop offset="100%" style="stop-color:#FF0099;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+        </svg>
+        <svg id="shooting-svg-3" class="shooting-star-svg" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="star-grad-3" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#00B8FF;stop-opacity:0" />
+                    <stop offset="100%" style="stop-color:#00FF9E;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+        </svg>
+
+        <div class="max-w-7xl mx-auto text-center w-full relative z-10">
             <div class="text-yellow-400 text-xs sm:text-sm font-mono mb-4 opacity-0 animate-slide-up"
                 style="animation-delay: 0.2s">// Welcome to my digital realm</div>
-            <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-4 sm:mb-6 opacity-0 animate-slide-up leading-tight flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4"
+            <h1 class="text-4xl sm:text-7xl md:text-7xl lg:text-8xl font-black mb-4 sm:mb-6 opacity-0 animate-slide-up leading-tight flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4"
                 style="animation-delay: 0.4s">
                 <span>Hi, I'm</span>
                 <span class="font-Pixelify f1 text-yellow-400 name-pattern-effect" data-shadow="Vaibhav Ghoshi">Vaibhav
@@ -584,17 +157,26 @@
             </div>
             <div class="flex flex-wrap gap-3 sm:gap-4 justify-center opacity-0 animate-slide-up px-4"
                 style="animation-delay: 1.2s">
-                <a href="#projects"
-                    class="px-4 sm:px-8 py-2 sm:py-3 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-500 transition-all hover:scale-105 glow-yellow text-sm sm:text-base">
-                    View My Work
+                <a href="#projects" class="btn btn-primary">
+                    <span class="btn-corner tl"></span>
+                    <span class="btn-corner tr"></span>
+                    <span class="btn-corner bl"></span>
+                    <span class="btn-corner br"></span>
+                    <span class="btn-label">⚡ View My Work</span>
                 </a>
-                <button id="download-cv-btn"
-                    class="px-4 sm:px-8 py-2 sm:py-3 border-2 border-yellow-400 text-yellow-400 font-semibold rounded-lg hover:bg-yellow-400 hover:text-black transition-all text-sm sm:text-base">
-                    Download CV
+                <button id="download-cv-btn" class="btn btn-outline">
+                    <span class="btn-corner tl"></span>
+                    <span class="btn-corner tr"></span>
+                    <span class="btn-corner bl"></span>
+                    <span class="btn-corner br"></span>
+                    <span class="btn-label">📄 Download CV</span>
                 </button>
-                <a href="#terminal"
-                    class="px-4 sm:px-8 py-2 sm:py-3 text-yellow-400 font-semibold rounded-lg hover:bg-neutral-800 transition-all text-sm sm:text-base">
-                    Let's Connect
+                <a href="#contact" class="btn btn-ghost">
+                    <span class="btn-corner tl"></span>
+                    <span class="btn-corner tr"></span>
+                    <span class="btn-corner bl"></span>
+                    <span class="btn-corner br"></span>
+                    <span class="btn-label">💬 Let's Connect</span>
                 </a>
             </div>
             <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-subtle hidden sm:block">
@@ -755,91 +337,188 @@
         </div>
     </section>
 
-    <!-- Experience Timeline -->
-    <section id="experience" class="py-20 px-4">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="text-4xl md:text-5xl font-black mb-4 text-center">
-                The <span class="text-yellow-400">Grind</span>
-            </h2>
-            <p class="text-neutral-400 text-center mb-16 font-mono text-sm">// Level-up timeline</p>
+    <!-- Experience Timeline — Quest Log -->
+    <section id="experience" class="py-16 sm:py-24 px-4 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto relative">
+            <!-- Section Header -->
+            <div class="text-center mb-16 sm:mb-20">
+                <div class="inline-block px-4 py-1.5 border border-yellow-400/30 rounded-full text-yellow-400 font-mono text-xs mb-4 tracking-widest"
+                    style="background: rgba(250,204,21,0.05);">
+                    ⚔️ QUEST LOG
+                </div>
+                <h2 class="text-4xl sm:text-5xl md:text-6xl font-black mb-3 f1">
+                    The <span class="text-yellow-400">Grind</span>
+                </h2>
+                <p class="text-neutral-500 font-mono text-xs sm:text-sm">// Level-up timeline &nbsp;|&nbsp; <span
+                        class="text-yellow-400">3 quests completed</span></p>
+            </div>
 
-            <div class="relative">
-                <!-- Timeline Line -->
-                <div class="absolute left-8 md:left-1/2 top-0 bottom-0 w-1 bg-yellow-400/30"></div>
+            <!-- Timeline Spine -->
+            <div class="hidden md:block absolute left-1/2 top-48 bottom-8 w-px"
+                style="background: linear-gradient(180deg, transparent 0%, rgba(250,204,21,0.15) 10%, rgba(250,204,21,0.3) 50%, rgba(250,204,21,0.15) 90%, transparent 100%);">
+                <div class="timeline-pulse-dot"></div>
+            </div>
 
-                <!-- Experience 1 -->
-                <div class="relative mb-16 md:flex md:items-center experience-item opacity-0">
-                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
-                        <div class="inline-block px-3 py-1 bg-yellow-400 text-black text-xs font-bold rounded mb-2">2023
-                            - PRESENT</div>
-                        <h3 class="text-2xl ml-10 font-bold mb-2">Senior Full-Stack Developer</h3>
-                        <p class="text-yellow-400 ml-10 font-semibold mb-3">TechCorp Solutions</p>
-                        <ul class=" ml-10 text-sm text-neutral-400 space-y-1 mb-4">
-                            <li>• Led team of 5 developers on enterprise platform</li>
-                            <li>• Improved performance by 40% through optimization</li>
-                            <li>• Architected microservices infrastructure</li>
-                        </ul>
-                        <div class=" ml-10 flex flex-wrap gap-2 md:justify-end">
-                            <span class="px-2 py-1 bg-neutral-800 text-yellow-400 text-xs rounded">React</span>
-                            <span class="px-2 py-1 bg-neutral-800 text-yellow-400 text-xs rounded">Node.js</span>
-                            <span class="px-2 py-1 bg-neutral-800 text-yellow-400 text-xs rounded">AWS</span>
+            <!-- Quest Cards -->
+            <div class="relative space-y-8 md:space-y-0">
+
+                <!-- Quest 1 — Senior Full-Stack Developer -->
+                <div class="quest-card-wrapper md:flex md:items-center md:mb-20 mb-10">
+                    <div class="md:w-1/2 md:pr-16 md:text-right">
+                        <div class="quest-card group" style="animation-delay: 0.1s">
+                            <!-- Card Glow Border -->
+                            <div class="quest-card-glow quest-gold"></div>
+                            <div class="quest-card-inner">
+                                <!-- Header Bar -->
+                                <div class="quest-header quest-header-gold">
+                                    <span class="quest-status">● ACTIVE</span>
+                                    <span class="quest-xp">+1200 XP</span>
+                                </div>
+                                <!-- Content -->
+                                <div class="p-5 sm:p-6">
+                                    <div class="flex items-center gap-3 mb-3 md:justify-end">
+                                        <span class="quest-date-badge quest-date-active">2023 — PRESENT</span>
+                                    </div>
+                                    <h3
+                                        class="text-xl sm:text-2xl font-bold text-white mb-1 group-hover:text-yellow-400 transition-colors">
+                                        Senior Full-Stack Developer</h3>
+                                    <p class="text-yellow-400/80 font-semibold text-sm mb-4 font-mono">@ TechCorp
+                                        Solutions</p>
+                                    <ul class="text-sm text-neutral-400 space-y-2 mb-5">
+                                        <li class="flex items-start gap-2 md:justify-end">
+                                            <span>Led team of 5 developers on enterprise platform</span>
+                                            <span class="text-yellow-400 text-xs mt-0.5 shrink-0">▸</span>
+                                        </li>
+                                        <li class="flex items-start gap-2 md:justify-end">
+                                            <span>Improved performance by 40% through optimization</span>
+                                            <span class="text-yellow-400 text-xs mt-0.5 shrink-0">▸</span>
+                                        </li>
+                                        <li class="flex items-start gap-2 md:justify-end">
+                                            <span>Architected microservices infrastructure</span>
+                                            <span class="text-yellow-400 text-xs mt-0.5 shrink-0">▸</span>
+                                        </li>
+                                    </ul>
+                                    <div class="flex flex-wrap gap-2 md:justify-end">
+                                        <span class="quest-tag">React</span>
+                                        <span class="quest-tag">Node.js</span>
+                                        <span class="quest-tag">AWS</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div
-                        class="absolute left-8 md:left-1/2 transform -translate-x-1/2 w-16 h-16 bg-neutral-900 border-4 border-yellow-400 rounded-full flex items-center justify-center glow-yellow">
-                        <span class="text-2xl">⚡</span>
-                    </div>
-                </div>
-
-                <!-- Experience 2 -->
-                <div class="relative mb-16 md:flex md:items-center md:flex-row-reverse experience-item opacity-0">
-                    <div class="md:w-1/2 md:pl-12 mb-4 md:mb-0">
-                        <div class="inline-block px-3 py-1 bg-neutral-700 text-white text-xs font-bold rounded mb-2">
-                            2021 - 2023</div>
-                        <h3 class="text-2xl ml-10 font-bold mb-2">Full-Stack Developer</h3>
-                        <p class="text-yellow-400 ml-10 font-semibold mb-3">StartupHub Inc</p>
-                        <ul class=" ml-10 text-sm text-neutral-400 space-y-1 mb-4">
-                            <li>• Built MVP from scratch, gained 10K users</li>
-                            <li>• Implemented real-time features with WebSockets</li>
-                            <li>• Mentored 3 junior developers</li>
-                        </ul>
-                        <div class=" ml-10 flex flex-wrap gap-2">
-                            <span class="px-2 py-1 bg-neutral-800 text-yellow-400 text-xs rounded">Vue.js</span>
-                            <span class="px-2 py-1 bg-neutral-800 text-yellow-400 text-xs rounded">Express</span>
-                            <span class="px-2 py-1 bg-neutral-800 text-yellow-400 text-xs rounded">MongoDB</span>
+                    <!-- Timeline Node -->
+                    <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 z-10">
+                        <div class="quest-node quest-node-gold">
+                            <span class="text-xl">⚡</span>
                         </div>
                     </div>
-                    <div
-                        class="absolute left-8 md:left-1/2 transform -translate-x-1/2 w-16 h-16 bg-neutral-900 border-4 border-yellow-400 rounded-full flex items-center justify-center glow-yellow">
-                        <span class="text-2xl">🚀</span>
-                    </div>
+                    <div class="md:w-1/2"></div>
                 </div>
 
-                <!-- Experience 3 -->
-                <div class="relative mb-16 md:flex md:items-center experience-item opacity-0">
-                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
-                        <div class="inline-block px-3 py-1 bg-neutral-700 text-white text-xs font-bold rounded mb-2">
-                            2019 - 2021</div>
-                        <h3 class="text-2xl ml-10 font-bold mb-2">Frontend Developer</h3>
-                        <p class="text-yellow-400 ml-10 font-semibold mb-3">Digital Agency Co</p>
-                        <ul class=" ml-10 text-sm text-neutral-400 space-y-1 mb-4">
-                            <li>• Developed 15+ client websites</li>
-                            <li>• Specialized in animations and interactions</li>
-                            <li>• Achieved 95+ Lighthouse scores</li>
-                        </ul>
-                        <div class="flex ml-10 flex-wrap gap-2 md:justify-end">
-                            <span class="px-2 py-1 bg-neutral-800 text-yellow-400 text-xs rounded">React</span>
-                            <span class="px-2 py-1 bg-neutral-800 text-yellow-400 text-xs rounded">GSAP</span>
-                            <span class="px-2 py-1 bg-neutral-800 text-yellow-400 text-xs rounded">Sass</span>
+                <!-- Quest 2 — Full-Stack Developer -->
+                <div class="quest-card-wrapper md:flex md:items-center md:flex-row-reverse md:mb-20 mb-10">
+                    <div class="md:w-1/2 md:pl-16">
+                        <div class="quest-card group" style="animation-delay: 0.3s">
+                            <div class="quest-card-glow quest-silver"></div>
+                            <div class="quest-card-inner">
+                                <div class="quest-header quest-header-silver">
+                                    <span class="quest-status">✓ COMPLETED</span>
+                                    <span class="quest-xp">+900 XP</span>
+                                </div>
+                                <div class="p-5 sm:p-6">
+                                    <div class="flex items-center gap-3 mb-3">
+                                        <span class="quest-date-badge">2021 — 2023</span>
+                                    </div>
+                                    <h3
+                                        class="text-xl sm:text-2xl font-bold text-white mb-1 group-hover:text-yellow-400 transition-colors">
+                                        Full-Stack Developer</h3>
+                                    <p class="text-yellow-400/80 font-semibold text-sm mb-4 font-mono">@ StartupHub Inc
+                                    </p>
+                                    <ul class="text-sm text-neutral-400 space-y-2 mb-5">
+                                        <li class="flex items-start gap-2">
+                                            <span class="text-neutral-500 text-xs mt-0.5 shrink-0">▸</span>
+                                            <span>Built MVP from scratch, gained 10K users</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <span class="text-neutral-500 text-xs mt-0.5 shrink-0">▸</span>
+                                            <span>Implemented real-time features with WebSockets</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <span class="text-neutral-500 text-xs mt-0.5 shrink-0">▸</span>
+                                            <span>Mentored 3 junior developers</span>
+                                        </li>
+                                    </ul>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="quest-tag">Vue.js</span>
+                                        <span class="quest-tag">Express</span>
+                                        <span class="quest-tag">MongoDB</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div
-                        class="absolute left-8 md:left-1/2 transform -translate-x-1/2 w-16 h-16 bg-neutral-900 border-4 border-yellow-400 rounded-full flex items-center justify-center glow-yellow">
-                        <span class="text-2xl">💻</span>
+                    <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 z-10">
+                        <div class="quest-node quest-node-silver">
+                            <span class="text-xl">🚀</span>
+                        </div>
                     </div>
+                    <div class="md:w-1/2"></div>
                 </div>
+
+                <!-- Quest 3 — Frontend Developer -->
+                <div class="quest-card-wrapper md:flex md:items-center md:mb-8 mb-10">
+                    <div class="md:w-1/2 md:pr-16 md:text-right">
+                        <div class="quest-card group" style="animation-delay: 0.5s">
+                            <div class="quest-card-glow quest-bronze"></div>
+                            <div class="quest-card-inner">
+                                <div class="quest-header quest-header-bronze">
+                                    <span class="quest-status">✓ COMPLETED</span>
+                                    <span class="quest-xp">+600 XP</span>
+                                </div>
+                                <div class="p-5 sm:p-6">
+                                    <div class="flex items-center gap-3 mb-3 md:justify-end">
+                                        <span class="quest-date-badge">2019 — 2021</span>
+                                    </div>
+                                    <h3
+                                        class="text-xl sm:text-2xl font-bold text-white mb-1 group-hover:text-yellow-400 transition-colors">
+                                        Frontend Developer</h3>
+                                    <p class="text-yellow-400/80 font-semibold text-sm mb-4 font-mono">@ Digital Agency
+                                        Co</p>
+                                    <ul class="text-sm text-neutral-400 space-y-2 mb-5">
+                                        <li class="flex items-start gap-2 md:justify-end">
+                                            <span>Developed 15+ client websites</span>
+                                            <span class="text-neutral-500 text-xs mt-0.5 shrink-0">▸</span>
+                                        </li>
+                                        <li class="flex items-start gap-2 md:justify-end">
+                                            <span>Specialized in animations and interactions</span>
+                                            <span class="text-neutral-500 text-xs mt-0.5 shrink-0">▸</span>
+                                        </li>
+                                        <li class="flex items-start gap-2 md:justify-end">
+                                            <span>Achieved 95+ Lighthouse scores</span>
+                                            <span class="text-neutral-500 text-xs mt-0.5 shrink-0">▸</span>
+                                        </li>
+                                    </ul>
+                                    <div class="flex flex-wrap gap-2 md:justify-end">
+                                        <span class="quest-tag">React</span>
+                                        <span class="quest-tag">GSAP</span>
+                                        <span class="quest-tag">Sass</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 z-10">
+                        <div class="quest-node quest-node-bronze">
+                            <span class="text-xl">💻</span>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2"></div>
+                </div>
+
             </div>
         </div>
+
     </section>
 
     <!-- Projects Section -->
@@ -1210,9 +889,12 @@
 
                         <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
 
-                        <button type="submit"
-                            class="w-full px-8 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all hover:scale-105 glow-yellow-strong font-mono">
-                            Send Message →
+                        <button type="submit" class="btn btn-primary btn-submit">
+                            <span class="btn-corner tl"></span>
+                            <span class="btn-corner tr"></span>
+                            <span class="btn-corner bl"></span>
+                            <span class="btn-corner br"></span>
+                            <span class="btn-label">🚀 Send Message</span>
                         </button>
 
                         <div id="form-status" class="text-center text-sm font-mono hidden"></div>
@@ -1328,359 +1010,6 @@
         </div>
     </footer>
 
-    <script>
-        // Custom Cursor
-        const cursorRing = document.querySelector('.cursor-ring');
-        const cursorDot = document.querySelector('.cursor-dot');
-
-        let mouseX = 0, mouseY = 0;
-        let ringX = 0, ringY = 0;
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            cursorDot.style.left = mouseX + 'px';
-            cursorDot.style.top = mouseY + 'px';
-        });
-
-        function animateCursorRing() {
-            ringX += (mouseX - ringX) * 0.15;
-            ringY += (mouseY - ringY) * 0.15;
-            cursorRing.style.left = ringX + 'px';
-            cursorRing.style.top = ringY + 'px';
-            requestAnimationFrame(animateCursorRing);
-        }
-        animateCursorRing();
-
-        // Cursor interactions
-        const interactiveElements = document.querySelectorAll('a, button, .skill-card, .project-card, .achievement-badge');
-        interactiveElements.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursorRing.style.width = '48px';
-                cursorRing.style.height = '48px';
-            });
-            el.addEventListener('mouseleave', () => {
-                cursorRing.style.width = '32px';
-                cursorRing.style.height = '32px';
-            });
-        });
-
-        // Typing Animation
-        const texts = ['Web Developer', 'DSA with C++', 'Tech Digger', 'Problem Solver', 'Open Source Contributor'];
-        let textIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-        const typedTextElement = document.getElementById('typed-text');
-
-        function typeText() {
-            const currentText = texts[textIndex];
-
-            if (isDeleting) {
-                typedTextElement.textContent = currentText.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                typedTextElement.textContent = currentText.substring(0, charIndex + 1);
-                charIndex++;
-            }
-
-            if (!isDeleting && charIndex === currentText.length) {
-                setTimeout(() => isDeleting = true, 2000);
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                textIndex = (textIndex + 1) % texts.length;
-            }
-
-            const speed = isDeleting ? 50 : 100;
-            setTimeout(typeText, speed);
-        }
-
-        setTimeout(typeText, 1000);
-
-        // XP Bar Animation
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const xpBar = document.getElementById('xp-bar');
-                let currentXP = 0;
-                const targetXP = 3420;
-                const maxXP = 5000;
-                const duration = 2000;
-                const steps = 60;
-                const increment = targetXP / steps;
-                const stepDuration = duration / steps;
-
-                const interval = setInterval(() => {
-                    currentXP += increment;
-                    if (currentXP >= targetXP) {
-                        currentXP = targetXP;
-                        clearInterval(interval);
-                    }
-                    document.getElementById('current-xp').textContent = Math.floor(currentXP);
-                }, stepDuration);
-            }, 500);
-        });
-
-        // Scroll Animations
-        const observerOptions = {
-            threshold: 0.2,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.experience-item').forEach((item, index) => {
-            item.style.transition = `all 0.6s ease ${index * 0.2}s`;
-            observer.observe(item);
-        });
-
-        // Skill Bar Animation
-        const skillObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const bars = entry.target.querySelectorAll('.bar-fill');
-                    bars.forEach(bar => {
-                        const targetWidth = bar.getAttribute('data-width');
-                        if (targetWidth) {
-                            bar.style.width = targetWidth;
-                        }
-                    });
-                    // Only animate once
-                    skillObserver.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.skill-card').forEach((card) => {
-            skillObserver.observe(card);
-        });
-
-        // Mobile Menu
-        const menuToggle = document.getElementById('menu-toggle');
-        const mobileMenu = document.querySelector('.mobile-menu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
-
-        menuToggle.addEventListener('click', () => {
-            mobileMenu.classList.toggle('active');
-        });
-
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.remove('active');
-            });
-        });
-
-        // Project Filter
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const projectCards = document.querySelectorAll('.project-card');
-
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const filter = btn.dataset.filter;
-
-                filterBtns.forEach(b => {
-                    b.classList.remove('bg-yellow-400', 'text-black');
-                    b.classList.add('bg-neutral-800', 'text-neutral-400');
-                });
-                btn.classList.remove('bg-neutral-800', 'text-neutral-400');
-                btn.classList.add('bg-yellow-400', 'text-black');
-
-                projectCards.forEach(card => {
-                    if (filter === 'all' || card.dataset.category === filter) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            });
-        });
-
-        // Terminal
-        const terminalToggle = document.getElementById('terminal-toggle');
-        const terminal = document.getElementById('terminal');
-        const terminalContent = document.getElementById('terminal-content');
-        const terminalInput = document.getElementById('terminal-input');
-        const red = document.getElementById('terminal1');
-        const yellow = document.getElementById('terminal2');
-        const green = document.getElementById('terminal3');
-        let isTerminalMinimized = false;
-
-
-        red.addEventListener('click', () => {
-            terminal.style.display = 'none';
-        });
-        yellow.addEventListener('click', () => {
-            isTerminalMinimized = !isTerminalMinimized;
-            terminal.classList.toggle('minimized');
-        });
-
-
-
-        terminalToggle.addEventListener('click', () => {
-            isTerminalMinimized = !isTerminalMinimized;
-            terminal.classList.toggle('minimized');
-        });
-
-        const commands = {
-            help: `Available commands:
-  help      - Show this help message
-  about     - Display information about me
-  skills    - List all my skills
-  contact   - Show contact information
-  projects  - List my projects
-  clear     - Clear the terminal
-  coffee    - Refill XP bar ☕`,
-            about: `Vaibhav Ghoshi - Web Developer & DSA Enthusiast
-Tech Stack: C++, JavaScript, HTML, CSS, Node.js, React, Tailwind
-Passion: Building innovative web applications and solving DSA problems
-Tagline: engineered for engineering 👨‍🔧
-Fun Fact: Daily DSA practice keeps the bugs away 🐛`,
-            skills: `🟢 Expert: C++, JavaScript, HTML5, CSS3
-🟡 Advanced: Node.js, React, Tailwind CSS, Bootstrap
-🟠 Intermediate: MongoDB, Supabase, EJS, Git`,
-            contact: `📧 Email: vaibhav7290119@gmail.com
-🐙 GitHub: github.com/Classyvaibhav06
-💼 LinkedIn: linkedin.com/in/vaibhav-ghoshi
-📷 Instagram: @vaibhav.ghoshi
-📝 Medium: @vaibhavghoshi
-🎥 YouTube: @code_jaibabba`,
-            projects: `Featured Projects:
-1. Flying Modi Game - Trending game recreation (⭐ 2)
-2. DSA with C++ - Daily DSA practice repo (⭐ 2)
-3. Notification Popup - Modern UI component (⭐ 1)
-4. Git Project Tools - Developer utilities (⭐ 1)
-5. Web Development Projects - ST2, ST3 (⭐ 1 each)
-Total: 18 repositories on GitHub`,
-            clear: 'CLEAR',
-            coffee: 'COFFEE'
-        };
-
-        function addTerminalLine(text, className = '') {
-            const line = document.createElement('div');
-            line.className = className;
-            line.textContent = text;
-            terminalContent.appendChild(line);
-            terminalContent.scrollTop = terminalContent.scrollHeight;
-        }
-
-        terminalInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const command = terminalInput.value.trim().toLowerCase();
-
-                addTerminalLine(`$ ${terminalInput.value}`, 'text-yellow-400 mb-2');
-
-                if (command === 'clear') {
-                    terminalContent.innerHTML = '';
-                } else if (command === 'coffee') {
-                    addTerminalLine('☕ Refilling XP bar...', 'text-green-400');
-                    const xpBar = document.getElementById('xp-bar');
-                    xpBar.style.width = '100%';
-                    document.getElementById('current-xp').textContent = '5000';
-                    setTimeout(() => {
-                        xpBar.style.width = '68%';
-                        document.getElementById('current-xp').textContent = '3420';
-                    }, 2000);
-                } else if (commands[command]) {
-                    addTerminalLine(commands[command], 'text-neutral-300 mb-4 whitespace-pre-line');
-                } else if (command) {
-                    addTerminalLine(`Command not found: ${command}. Type 'help' for available commands.`, 'text-red-400 mb-4');
-                }
-
-                terminalInput.value = '';
-            }
-        });
-
-        // Smooth scroll with offset for fixed header
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    const offset = 80;
-                    const targetPosition = target.offsetTop - offset;
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // Contact Form Submission
-        const contactForm = document.getElementById('contact-form');
-        const formStatus = document.getElementById('form-status');
-
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const subject = document.getElementById('subject').value;
-            const message = document.getElementById('message').value;
-            const recaptchaResponse = grecaptcha.getResponse();
-
-            if (!recaptchaResponse) {
-                formStatus.classList.remove('hidden');
-                formStatus.textContent = 'Please complete the reCAPTCHA.';
-                formStatus.classList.add('text-red-400');
-                return;
-            }
-
-            const formData = { name, email, subject, message, 'g-recaptcha-response': recaptchaResponse };
-
-            formStatus.classList.remove('hidden');
-            formStatus.textContent = 'Sending...';
-            formStatus.classList.remove('text-green-400', 'text-red-400');
-
-            fetch('https://portfolio-xs63.onrender.com/api/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        formStatus.textContent = 'Message sent successfully!';
-                        formStatus.classList.add('text-green-400');
-                        contactForm.reset();
-                        grecaptcha.reset();
-                    } else {
-                        formStatus.textContent = data.msg || 'Something went wrong. Please try again.';
-                        formStatus.classList.add('text-red-400');
-                    }
-                })
-                .catch(err => {
-                    formStatus.textContent = 'An error occurred. Please try again later.';
-                    formStatus.classList.add('text-red-400');
-                    console.error('Error:', err);
-                });
-        });
-    </script>
-    <script>
-        // Download CV
-        document.getElementById('download-cv-btn').addEventListener('click', function () {
-            // Create a temporary anchor element
-            var link = document.createElement('a');
-            link.href = 'resume (1).pdf';
-            link.download = 'Vaibhav-Ghoshi-Resume.pdf';
-
-            // Append the anchor to the body
-            document.body.appendChild(link);
-
-            // Programmatically click the anchor
-            link.click();
-
-            // Remove the anchor from the body
-            document.body.removeChild(link);
-        });
-    </script>
 
     <!-- RAG Chat Bot Widget -->
     <div id="chatbot-widget" class="fixed bottom-6 left-6 z-[10000] flex flex-col items-start"
@@ -1742,94 +1071,7 @@ Total: 18 repositories on GitHub`,
         </button>
     </div>
 
-    <script>
-        const chatWindow = document.getElementById('chat-window');
-        const chatToggle = document.getElementById('chat-toggle');
-        const closeChat = document.getElementById('close-chat');
-        const chatInput = document.getElementById('chat-input');
-        const sendChat = document.getElementById('send-chat');
-        const chatMessages = document.getElementById('chat-messages');
-
-        // Define backend URL for dev and production
-        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'http://localhost:5001'
-            : 'https://portfolio-xs63.onrender.com';
-
-        let isOpen = false;
-
-        function toggleChat() {
-            isOpen = !isOpen;
-            if (isOpen) {
-                chatWindow.style.display = 'flex';
-                chatWindow.classList.remove('hidden');
-                setTimeout(() => chatInput.focus(), 100);
-                chatToggle.querySelector('.bg-red-500')?.remove();
-            } else {
-                chatWindow.style.display = 'none';
-                chatWindow.classList.add('hidden');
-            }
-        }
-
-        chatToggle.addEventListener('click', toggleChat);
-        closeChat.addEventListener('click', toggleChat);
-
-        function appendMessage(text, isUser = false) {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `p-3 rounded-lg max-w-[85%] ${isUser ? 'self-end rounded-tr-none' : 'self-start rounded-tl-none'} whitespace-pre-wrap text-sm`;
-            msgDiv.style.background = isUser ? 'rgba(250, 204, 21, 0.85)' : 'rgba(38, 38, 38, 0.7)';
-            msgDiv.style.color = isUser ? '#000' : '#facc15';
-            msgDiv.textContent = text;
-            chatMessages.appendChild(msgDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        async function handleSend() {
-            const text = chatInput.value.trim();
-            if (!text) return;
-
-            // Optimistic UI update
-            appendMessage(text, true);
-            chatInput.value = '';
-
-            // Show typing indicator
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'bg-neutral-800 text-yellow-400 p-3 rounded-lg rounded-tl-none self-start max-w-[85%] animate-pulse';
-            typingDiv.textContent = "Thinking...";
-            typingDiv.id = "typing-indicator";
-            chatMessages.appendChild(typingDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            try {
-                // Actually if your current backend is locally running on port 5000 we use that. 
-                // We'll try the backend chat route.
-                const response = await fetch(`${API_BASE}/api/chat`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: text })
-                });
-
-                const data = await response.json();
-
-                // Remove typing indicator
-                document.getElementById('typing-indicator')?.remove();
-
-                if (data.reply) {
-                    appendMessage(data.reply);
-                } else {
-                    appendMessage("Sorry, I received an empty response. Try again.");
-                }
-            } catch (err) {
-                document.getElementById('typing-indicator')?.remove();
-                appendMessage("Failed to connect to the backend. Make sure the RAG server is running!");
-                console.error(err);
-            }
-        }
-
-        sendChat.addEventListener('click', handleSend);
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleSend();
-        });
-    </script>
+    <script src="script.js" defer></script>
 </body>
 
 </html>
