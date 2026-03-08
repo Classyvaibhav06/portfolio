@@ -51,10 +51,21 @@ html {
     z-index: 9999;
     opacity: 0.1;
 }
+.scroll-to{
+    top: 30rem;
+    left:44%;
+}
+
+
+.vaibhav-name{
+    padding-right: 70px ;
+}
 
 /* Custom Cursor */
 .cursor-ring {
     position: fixed;
+    top: 0;
+    left: 0;
     width: 32px;
     height: 32px;
     border: 2px solid #facc15;
@@ -62,20 +73,20 @@ html {
     pointer-events: none;
     z-index: 10000;
     transition: width 0.2s, height 0.2s;
-    transform: translate(-50%, -50%);
-    will-change: transform, left, top;
+    will-change: transform;
 }
 
 .cursor-dot {
     position: fixed;
+    top: 0;
+    left: 0;
     width: 8px;
     height: 8px;
     background: #facc15;
     border-radius: 50%;
     pointer-events: none;
     z-index: 10001;
-    transform: translate(-50%, -50%);
-    will-change: left, top;
+    will-change: transform;
 }
 
 /* Glow Effect */
@@ -190,7 +201,7 @@ html {
 
 /* Skill Card - Pixel Glow Style */
 .skill-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
     position: relative;
     background: #111;
     border: 2px solid #333;
@@ -210,19 +221,17 @@ html {
 }
 
 .skill-card:hover {
-    transform: translateY(-6px);
-    border-color: #facc15;
-    box-shadow:
-        0 0 8px #facc15,
-        0 0 16px rgba(250, 204, 21, 0.5),
-        0 0 32px rgba(250, 204, 21, 0.25),
-        0 0 64px rgba(250, 204, 21, 0.1),
-        inset 0 0 15px rgba(250, 204, 21, 0.05);
+    transform: translateY(-4px) scale(1.02);
+    border-color: rgba(250, 204, 21, 0.8);
+    box-shadow: 
+        0 8px 40px rgba(0, 0, 0, 0.8), 
+        0 0 35px rgba(250, 204, 21, 0.25), 
+        0 0 70px rgba(250, 204, 21, 0.15);
 }
 
 .skill-card:hover::before {
-    border-color: rgba(250, 204, 21, 0.3);
-    box-shadow: 0 0 12px rgba(250, 204, 21, 0.15);
+    border-color: transparent;
+    box-shadow: none;
 }
 
 .skill-card .skill-icon {
@@ -1177,11 +1186,61 @@ opacity: 0;
 /* Responsive */
 @media (max-width: 768px) {
     .quest-card:hover {
-transform: translateY(-2px);
+        transform: translateY(-2px);
     }
 
     .quest-node {
-width: 44px;
-height: 44px;
+        width: 44px;
+        height: 44px;
     }
+}
+
+/* ===== Diamond Item Box Achievements ===== */
+.achievement-box {
+    position: relative;
+    background: #0a0a0a;
+    border: 1px solid #1f1f1f;
+    padding: 2px;
+    transition: all 0.3s ease;
+}
+
+.achievement-box:hover {
+    border-color: #333;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px -10px rgba(0,0,0,0.8), 0 0 30px rgba(250, 204, 21, 0.08);
+}
+
+.achievement-box .frame-corner {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+    z-index: 10;
+}
+
+.ach-inner {
+    background: #111;
+    padding: 24px 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.ach-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: rotate(45deg);
+    margin-top: 15px;
+    margin-bottom: 25px;
+}
+
+.ach-icon span {
+    transform: rotate(-45deg);
+}
+
+.achievement-box:hover .ach-icon {
+    box-shadow: 0 0 25px rgba(250, 204, 21, 0.2), inset 0 0 15px rgba(250, 204, 21, 0.1);
 }

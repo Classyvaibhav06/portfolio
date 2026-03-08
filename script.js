@@ -2,24 +2,30 @@
 const cursorRing = document.querySelector('.cursor-ring');
 const cursorDot = document.querySelector('.cursor-dot');
 
-let mouseX = 0, mouseY = 0;
-let ringX = 0, ringY = 0;
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+let dotX = mouseX, dotY = mouseY;
+let ringX = mouseX, ringY = mouseY;
 
 document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
-    cursorDot.style.left = mouseX + 'px';
-    cursorDot.style.top = mouseY + 'px';
 });
 
-function animateCursorRing() {
+function animateCursor() {
+    // Fast lerp for dot for extreme responsiveness
+    dotX += (mouseX - dotX) * 0.4;
+    dotY += (mouseY - dotY) * 0.4;
+    cursorDot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
+
+    // Slower lerp for the lagging ring
     ringX += (mouseX - ringX) * 0.15;
     ringY += (mouseY - ringY) * 0.15;
-    cursorRing.style.left = ringX + 'px';
-    cursorRing.style.top = ringY + 'px';
-    requestAnimationFrame(animateCursorRing);
+    cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+
+    requestAnimationFrame(animateCursor);
 }
-animateCursorRing();
+animateCursor();
 
 // Cursor interactions
 const interactiveElements = document.querySelectorAll('a, button, .skill-card, .project-card, .achievement-badge');
@@ -186,25 +192,54 @@ const terminalToggle = document.getElementById('terminal-toggle');
 const terminal = document.getElementById('terminal');
 const terminalContent = document.getElementById('terminal-content');
 const terminalInput = document.getElementById('terminal-input');
-const red = document.getElementById('terminal1');
-const yellow = document.getElementById('terminal2');
-const green = document.getElementById('terminal3');
+const termTime = document.getElementById('term-time');
+
+// Set current login time for terminal
+if(termTime) {
+    const now = new Date();
+    termTime.textContent = now.toString().split(' ').slice(0,5).join(' ');
+}
+
+// Window Controls (Traffic Lights)
+const redBtn = document.getElementById('terminal1');
+const yellowBtn = document.getElementById('terminal2');
+const greenBtn = document.getElementById('teminal3');
+
 let isTerminalMinimized = false;
+let terminalOriginalHeight = terminalContent.style.height || getComputedStyle(terminalContent).height;
 
-
-red.addEventListener('click', () => {
+redBtn.addEventListener('click', () => {
+    // Red closes terminal completely
     terminal.style.display = 'none';
 });
-yellow.addEventListener('click', () => {
+
+yellowBtn.addEventListener('click', () => {
+    // Yellow minimizes down to just the header bar
     isTerminalMinimized = !isTerminalMinimized;
-    terminal.classList.toggle('minimized');
+    if(isTerminalMinimized) {
+        terminalContent.style.display = 'none';
+        terminalInput.parentElement.style.display = 'none';
+    } else {
+        terminalContent.style.display = 'block';
+        terminalInput.parentElement.style.display = 'flex';
+    }
 });
 
-
+greenBtn.addEventListener('click', () => {
+    // Green toggles pseudo full-screen size
+    terminal.classList.toggle('w-full');
+    terminal.classList.toggle('sm:w-[800px]');
+});
 
 terminalToggle.addEventListener('click', () => {
     isTerminalMinimized = !isTerminalMinimized;
-    terminal.classList.toggle('minimized');
+    if(isTerminalMinimized) {
+        terminalContent.style.display = 'none';
+        terminalInput.parentElement.style.display = 'none';
+    } else {
+        terminalContent.style.display = 'block';
+        terminalInput.parentElement.style.display = 'flex';
+    }
 });
 
 const commands = {
@@ -249,16 +284,26 @@ function addTerminalLine(text, className = '') {
     terminalContent.scrollTop = terminalContent.scrollHeight;
 }
 
+function addCommandEcho(command) {
+    const line = document.createElement('div');
+    line.className = 'mb-2 flex gap-2';
+    line.innerHTML = `<span class="text-[#27c93f] font-mono font-bold">➜</span><span class="text-[#2EB9DF] font-mono font-bold">~</span><span class="text-white">${command}</span>`;
+    terminalContent.appendChild(line);
+}
+
 terminalInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
-        const command = terminalInput.value.trim().toLowerCase();
+        const rawCmd = terminalInput.value.trim();
+        const command = rawCmd.toLowerCase();
+        
+        if (!rawCmd) return;
 
-        addTerminalLine(`$ ${terminalInput.value}`, 'text-yellow-400 mb-2');
+        addCommandEcho(rawCmd);
 
         if (command === 'clear') {
             terminalContent.innerHTML = '';
         } else if (command === 'coffee') {
-            addTerminalLine('☕ Refilling XP bar...', 'text-green-400');
+            addTerminalLine('☕ Refilling XP bar...', 'text-[#ffbd2e] italic');
             const xpBar = document.getElementById('xp-bar');
             xpBar.style.width = '100%';
             document.getElementById('current-xp').textContent = '5000';
@@ -267,12 +312,13 @@ terminalInput.addEventListener('keypress', (e) => {
                 document.getElementById('current-xp').textContent = '3420';
             }, 2000);
         } else if (commands[command]) {
-            addTerminalLine(commands[command], 'text-neutral-300 mb-4 whitespace-pre-line');
+            addTerminalLine(commands[command], 'text-neutral-300 mb-4 whitespace-pre-line leading-relaxed');
         } else if (command) {
-            addTerminalLine(`Command not found: ${command}. Type 'help' for available commands.`, 'text-red-400 mb-4');
+            addTerminalLine(`zsh: command not found: ${command}. Type 'help' for available commands.`, 'text-[#ff5f56] mb-4');
         }
 
         terminalInput.value = '';
+        terminalContent.scrollTop = terminalContent.scrollHeight;
     }
 });
 

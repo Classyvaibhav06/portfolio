@@ -16,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/Classyvaibhav06/portfolio/issues"
   },
-  "homepage": "https://github.com/Classyvaibhav06/portfolio#readme"
+  "homepage": "https://github.com/Classyvaibhav06/portfolio#readme",
+  "dependencies": {
+    "@radix-ui/react-avatar": "^1.1.11",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.35.1",
+    "lucide-react": "^0.577.0",
+    "tailwind-merge": "^3.5.0"
+  }
 }
