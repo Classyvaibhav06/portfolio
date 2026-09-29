@@ -1,0 +1,2036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vaibhav Ghoshi — Minecraft Resume</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --mc-font-pixel: 'Press Start 2P', monospace;
+      --mc-font-text: 'VT323', monospace;
+      --mc-dirt: #866043;
+      --mc-stone: #686868;
+      --mc-dark-stone: #2b2b2b;
+      --mc-gui-bg: #c6c6c6;
+      --mc-gui-dark: #373737;
+      --mc-gui-light: #ffffff;
+      --mc-green: #55ff55;
+      --mc-dark-green: #00aa00;
+      --mc-gold: #ffaa00;
+      --mc-yellow: #ffff55;
+      --mc-aqua: #55ffff;
+      --mc-red: #ff5555;
+      --mc-btn-bg: #8b8b8b;
+      --mc-btn-hover: #9e9e9e;
+      --mc-border-light: #dfdfdf;
+      --mc-border-dark: #585858;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      image-rendering: pixelated;
+    }
+
+    body {
+      background-color: #111410;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 0.4) 0%, rgba(5, 5, 5, 0.95) 100%),
+        repeating-linear-gradient(45deg, #181818 0, #181818 32px, #141414 32px, #141414 64px);
+      font-family: var(--mc-font-pixel);
+      color: #fff;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      user-select: none;
+    }
+
+    /* Sound notification pill */
+    #sound-pill {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 200;
+      background: #2b2b2b;
+      border: 3px solid #000;
+      box-shadow: inset 2px 2px 0 #555, inset -2px -2px 0 #111;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 10px;
+      color: var(--mc-yellow);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    #sound-pill:hover {
+      transform: scale(1.05);
+      background: #3a3a3a;
+    }
+    #sound-pill:active {
+      transform: scale(0.97);
+    }
+
+    /* INTRO / STAGE CONTAINER */
+    #intro-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at 50% 35%, #1c2c18 0%, #0d160b 65%, #040703 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 90;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .vignette-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      box-shadow: inset 0 0 160px rgba(0, 0, 0, 0.9);
+      z-index: 5;
+    }
+
+    .title-banner {
+      margin-top: 10px;
+      margin-bottom: 6px;
+      text-align: center;
+      z-index: 10;
+    }
+    .title-banner h1 {
+      font-size: clamp(16px, 3.5vw, 26px);
+      color: var(--mc-yellow);
+      text-shadow: 3px 3px 0 #3f3f00;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+    .title-banner .subtitle {
+      font-size: clamp(9px, 1.6vw, 12px);
+      color: #aaaaaa;
+      text-shadow: 2px 2px 0 #222;
+      animation: pulseText 1.5s infinite alternate;
+    }
+
+    @keyframes pulseText {
+      from { color: #aaaaaa; transform: scale(1); }
+      to { color: var(--mc-green); transform: scale(1.03); }
+    }
+
+    /* 3D Voxel Canvas Viewport */
+    #voxel-stage {
+      width: 100%;
+      max-width: 580px;
+      height: 380px;
+      position: relative;
+      z-index: 8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: crosshair;
+    }
+    #voxel-canvas {
+      width: 540px;
+      height: 360px;
+      max-width: 95vw;
+      border: 4px solid #000;
+      box-shadow: inset 2px 2px 0 #444, inset -2px -2px 0 #111, 0 10px 30px rgba(0,0,0,0.8);
+      background: #141f12;
+      display: block;
+    }
+
+    /* Speech Bubble over 3D model */
+    .speech-bubble {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffffff;
+      color: #000000;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: bold;
+      border: 3px solid #000;
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.6);
+      display: none;
+      z-index: 15;
+      animation: bounce 0.35s infinite alternate;
+    }
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 8px 8px 0;
+      border-style: solid;
+      border-color: #ffffff transparent;
+      display: block;
+      width: 0;
+    }
+    @keyframes bounce {
+      from { transform: translateX(-50%) translateY(0); }
+      to { transform: translateX(-50%) translateY(-5px); }
+    }
+
+    /* Start / Detonate Button */
+    .start-btn {
+      position: relative;
+      background: var(--mc-btn-bg);
+      border: 4px solid #000;
+      box-shadow: inset 3px 3px 0 var(--mc-border-light), inset -3px -3px 0 var(--mc-border-dark);
+      color: #fff;
+      font-family: var(--mc-font-pixel);
+      font-size: 13px;
+      padding: 14px 26px;
+      cursor: pointer;
+      text-shadow: 2px 2px 0 #222;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+      transition: background 0.1s, transform 0.05s;
+    }
+    .start-btn:hover {
+      background: var(--mc-btn-hover);
+      color: var(--mc-yellow);
+      transform: scale(1.02);
+    }
+    .start-btn:active {
+      box-shadow: inset 3px 3px 0 var(--mc-border-dark), inset -3px -3px 0 var(--mc-border-light);
+      transform: translateY(2px);
+    }
+
+    /* SCREEN FLASH FOR EXPLOSION */
+    #flash-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #ffffff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 150;
+      transition: opacity 0.05s;
+    }
+
+    /* SCREEN SHAKE CLASS */
+    .shake-hard {
+      animation: screenShake 0.6s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    @keyframes screenShake {
+      10%, 90% { transform: translate3d(-7px, 5px, 0) rotate(-1.2deg); }
+      20%, 80% { transform: translate3d(9px, -7px, 0) rotate(1.8deg); }
+      30%, 50%, 70% { transform: translate3d(-12px, 9px, 0) rotate(-2.2deg); }
+      40%, 60% { transform: translate3d(14px, -11px, 0) rotate(2.2deg); }
+    }
+
+    /* DEATH / RESPAWN BANNER */
+    #death-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(140, 0, 0, 0.65);
+      z-index: 95;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+    }
+    #death-banner h2 {
+      font-size: clamp(22px, 5vw, 42px);
+      color: var(--mc-red);
+      text-shadow: 4px 4px 0 #3a0000;
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+    }
+    #death-banner p {
+      font-size: 14px;
+      color: #ffd2d2;
+      text-shadow: 2px 2px 0 #222;
+      margin-bottom: 24px;
+    }
+    #death-banner .score {
+      font-size: 16px;
+      color: var(--mc-yellow);
+      margin-bottom: 20px;
+    }
+
+    /* ==========================================================
+       MAIN RESUME GUI CONTAINER (MINECRAFT STYLE)
+       ========================================================== */
+    #resume-container {
+      display: none;
+      width: 100%;
+      max-width: 1020px;
+      margin: 20px auto 60px;
+      padding: 0 16px;
+      opacity: 0;
+      transform: translateY(30px) scale(0.96);
+      transition: opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 10;
+    }
+    #resume-container.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* HUD Bar: Hearts, Armor, Level, Controls */
+    .hud-bar {
+      background: #1c1c1c;
+      border: 4px solid #000;
+      box-shadow: inset 3px 3px 0 #444, inset -3px -3px 0 #111;
+      padding: 10px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .hud-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .hearts-row {
+      display: flex;
+      gap: 3px;
+    }
+    .pixel-heart {
+      width: 18px;
+      height: 18px;
+      background: #ff2222;
+      box-shadow: 
+        inset 2px 2px 0 #ff7777,
+        inset -2px -2px 0 #880000;
+      border: 2px solid #000;
+      clip-path: polygon(
+        20% 0%, 40% 0%, 50% 25%, 60% 0%, 80% 0%,
+        100% 25%, 100% 60%, 50% 100%, 0% 60%, 0% 25%
+      );
+    }
+    .xp-meter-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 180px;
+    }
+    .xp-number {
+      font-size: 13px;
+      color: var(--mc-green);
+      text-shadow: 2px 2px 0 #003300;
+      margin-bottom: 2px;
+    }
+    .xp-bar {
+      width: 100%;
+      height: 10px;
+      background: #152210;
+      border: 2px solid #000;
+      position: relative;
+      overflow: hidden;
+    }
+    .xp-fill {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #3dd63d, #72ff72);
+      box-shadow: 0 0 8px rgba(85, 255, 85, 0.8);
+    }
+    .hud-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .mc-mini-btn {
+      background: var(--mc-btn-bg);
+      border: 3px solid #000;
+      box-shadow: inset 2px 2px 0 var(--mc-border-light), inset -2px -2px 0 var(--mc-border-dark);
+      color: #fff;
+      font-family: var(--mc-font-pixel);
+      font-size: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mc-mini-btn:hover {
+      background: var(--mc-btn-hover);
+      color: var(--mc-yellow);
+    }
+    .mc-mini-btn:active {
+      transform: translateY(2px);
+      box-shadow: inset 2px 2px 0 var(--mc-border-dark), inset -2px -2px 0 var(--mc-border-light);
+    }
+
+    /* THE MINECRAFT INVENTORY / CRAFTING WINDOW */
+    .mc-window {
+      background: var(--mc-gui-bg);
+      border: 6px solid #000;
+      box-shadow: 
+        inset 4px 4px 0 var(--mc-gui-light),
+        inset -4px -4px 0 var(--mc-gui-dark),
+        0 12px 36px rgba(0, 0, 0, 0.8);
+      padding: 24px;
+      color: #2b2b2b;
+    }
+
+    /* WINDOW HEADER */
+    .mc-header {
+      border-bottom: 4px solid var(--mc-gui-dark);
+      padding-bottom: 18px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .hero-title-box h1 {
+      font-size: clamp(20px, 3.5vw, 30px);
+      color: #202020;
+      text-shadow: 2px 2px 0 #ffffff;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .hero-title-box .badge-role {
+      display: inline-block;
+      background: #373737;
+      color: var(--mc-yellow);
+      font-size: 11px;
+      padding: 5px 10px;
+      border: 2px solid #000;
+      box-shadow: inset 1px 1px 0 #666;
+      margin-bottom: 10px;
+    }
+    .contact-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .contact-tag {
+      background: #8b8b8b;
+      border: 2px solid #000;
+      box-shadow: inset 2px 2px 0 #dfdfdf, inset -2px -2px 0 #555;
+      padding: 6px 10px;
+      font-size: 10px;
+      color: #111;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.1s;
+    }
+    .contact-tag:hover {
+      background: #9e9e9e;
+      color: #000;
+      transform: translateY(-2px);
+    }
+
+    /* AVATAR + STATUS BADGE */
+    .player-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #9c9c9c;
+      border: 3px solid #000;
+      box-shadow: inset 2px 2px 0 #dfdfdf, inset -2px -2px 0 #555;
+      padding: 8px 12px;
+    }
+    .player-avatar {
+      width: 48px;
+      height: 48px;
+      background: #373737;
+      border: 2px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: inset 2px 2px 0 #555;
+    }
+    .player-info {
+      font-size: 10px;
+      line-height: 1.5;
+    }
+    .player-info .rank {
+      color: #007700;
+      font-weight: bold;
+    }
+
+    /* NAVIGATION TABS (MINECRAFT INVENTORY STYLE) */
+    .mc-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 20px;
+      border-bottom: 4px solid var(--mc-gui-dark);
+      padding-bottom: 4px;
+    }
+    .tab-btn {
+      background: #8b8b8b;
+      border: 3px solid #000;
+      border-bottom: none;
+      box-shadow: inset 2px 2px 0 var(--mc-border-light), inset -2px 0 0 var(--mc-border-dark);
+      font-family: var(--mc-font-pixel);
+      font-size: 10px;
+      color: #222;
+      padding: 10px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.1s;
+    }
+    .tab-btn:hover {
+      background: #9e9e9e;
+      color: #000;
+    }
+    .tab-btn.active {
+      background: var(--mc-gui-bg);
+      color: #000;
+      border-bottom: 4px solid var(--mc-gui-bg);
+      margin-bottom: -4px;
+      box-shadow: inset 2px 2px 0 #ffffff;
+      font-weight: bold;
+    }
+
+    /* TAB CONTENT PANELS */
+    .tab-pane {
+      display: none;
+    }
+    .tab-pane.active {
+      display: block;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* SECTION TITLE CARDS */
+    .mc-section-header {
+      background: #373737;
+      color: var(--mc-yellow);
+      border: 3px solid #000;
+      box-shadow: inset 2px 2px 0 #555, inset -2px -2px 0 #111;
+      padding: 8px 14px;
+      font-size: 13px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mc-section-header .sub-badge {
+      font-size: 9px;
+      color: #fff;
+      background: #222;
+      padding: 3px 6px;
+    }
+
+    /* SUMMARY / LORE BOX */
+    .lore-box {
+      background: #dfdfdf;
+      border: 3px solid #000;
+      box-shadow: inset 2px 2px 0 #fff, inset -2px -2px 0 #999;
+      padding: 16px;
+      margin-bottom: 20px;
+      font-family: var(--mc-font-text);
+      font-size: 22px;
+      line-height: 1.45;
+      color: #111;
+    }
+    .lore-box .highlight {
+      color: #008800;
+      font-weight: bold;
+    }
+
+    /* EXPERIENCE / QUEST CARDS */
+    .quest-card {
+      background: #adadad;
+      border: 3px solid #000;
+      box-shadow: inset 2px 2px 0 #dfdfdf, inset -2px -2px 0 #666;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .quest-card-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+    .quest-title {
+      font-size: 13px;
+      color: #111;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quest-date {
+      font-size: 10px;
+      background: #373737;
+      color: var(--mc-green);
+      padding: 4px 8px;
+      border: 2px solid #000;
+    }
+    .quest-company {
+      font-size: 11px;
+      color: #333;
+      margin-bottom: 12px;
+      font-weight: bold;
+    }
+    .quest-bullet-list {
+      list-style: none;
+      margin-bottom: 12px;
+    }
+    .quest-bullet-list li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 6px;
+      font-family: var(--mc-font-text);
+      font-size: 20px;
+      color: #1a1a1a;
+      line-height: 1.35;
+    }
+    .quest-bullet-list li::before {
+      content: '▶';
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 12px;
+      color: #007700;
+      font-family: var(--mc-font-pixel);
+    }
+    .quest-tech-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tech-chip {
+      background: #373737;
+      color: #fff;
+      font-size: 9px;
+      padding: 4px 8px;
+      border: 2px solid #000;
+      box-shadow: inset 1px 1px 0 #666;
+    }
+
+    /* PROJECTS / BUILDS GRID */
+    .builds-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+    .build-card {
+      background: #b5b5b5;
+      border: 3px solid #000;
+      box-shadow: inset 2px 2px 0 #ffffff, inset -2px -2px 0 #777777;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s;
+    }
+    .build-card:hover {
+      transform: translateY(-3px);
+      box-shadow: inset 2px 2px 0 #ffffff, inset -2px -2px 0 #444444, 0 6px 14px rgba(0,0,0,0.3);
+    }
+    .build-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .build-name {
+      font-size: 13px;
+      color: #000;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .build-link-btn {
+      background: var(--mc-btn-bg);
+      border: 2px solid #000;
+      box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #444;
+      color: #111;
+      font-size: 9px;
+      padding: 4px 6px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .build-link-btn:hover {
+      background: #fff;
+      color: #000;
+    }
+    .build-desc {
+      font-family: var(--mc-font-text);
+      font-size: 19px;
+      color: #222;
+      line-height: 1.35;
+      margin-bottom: 12px;
+      flex-grow: 1;
+    }
+
+    /* SKILLS / INVENTORY GRID */
+    .skills-inventory {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+    .slot-category {
+      background: #8b8b8b;
+      border: 3px solid #000;
+      box-shadow: inset 2px 2px 0 #dfdfdf, inset -2px -2px 0 #555;
+      padding: 12px;
+    }
+    .slot-category-title {
+      font-size: 11px;
+      color: var(--mc-yellow);
+      background: #2b2b2b;
+      padding: 4px 8px;
+      border: 2px solid #000;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .item-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .item-pill {
+      background: #dfdfdf;
+      color: #111;
+      border: 2px solid #000;
+      box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #888;
+      font-size: 9px;
+      padding: 5px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--mc-font-pixel);
+    }
+    .item-pill.diamond {
+      background: #bbf0f7;
+      color: #004b57;
+      border-color: #00606e;
+    }
+    .item-pill.emerald {
+      background: #c2f7c4;
+      color: #0b5c10;
+      border-color: #09470c;
+    }
+    .item-pill.gold {
+      background: #fff0b3;
+      color: #704f00;
+      border-color: #8c6300;
+    }
+
+    /* FOOTER STATS */
+    .mc-footer {
+      margin-top: 24px;
+      padding-top: 14px;
+      border-top: 4px solid var(--mc-gui-dark);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 9px;
+      color: #555;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 680px) {
+      .mc-window {
+        padding: 14px;
+      }
+      .hud-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .hud-left {
+        justify-content: space-between;
+      }
+      .hud-actions {
+        justify-content: center;
+      }
+      .tab-btn {
+        padding: 8px 10px;
+        font-size: 8px;
+      }
+      #voxel-stage {
+        height: 300px;
+      }
+      #voxel-canvas {
+        height: 280px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background sound & action pill -->
+  <div id="sound-pill" onclick="toggleAudio()">
+    <span id="sound-icon">🔊</span>
+    <span id="sound-label">SOUND: SYNTH MC SFX (ON)</span>
+  </div>
+
+  <!-- Screen flash layer -->
+  <div id="flash-overlay"></div>
+
+  <!-- ==========================================
+       INTRO LOADING / EXPLOSION SCREEN
+       ========================================== -->
+  <div id="intro-screen">
+    <div class="vignette-overlay"></div>
+
+    <div class="title-banner">
+      <h1>MINECRAFT RESUME LOADER</h1>
+      <div class="subtitle" id="status-text">INITIALIZING VOXEL ENGINE...</div>
+    </div>
+
+    <!-- 3D Voxel Canvas Viewport (100% Universal Canvas 2D) -->
+    <div id="voxel-stage" onclick="igniteCreeper()" title="Click Creeper to Detonate!">
+      <div class="speech-bubble" id="creeper-bubble">Sssssssss...</div>
+      <canvas id="voxel-canvas" width="540" height="360"></canvas>
+    </div>
+
+    <button class="start-btn" id="ignite-btn" onclick="igniteCreeper()">
+      <span>💥</span>
+      <span id="btn-text">DETONATE CREEPER &amp; LOAD RESUME</span>
+    </button>
+  </div>
+
+  <!-- DEATH / RESPAWN POPUP (Brief dramatic transition) -->
+  <div id="death-banner">
+    <h2>YOU WERE BLOWN UP!</h2>
+    <p>Vaibhav was blown up by Creeper while loading resume</p>
+    <div class="score">Score: &sect;a2026 &sect;f(All 36 Tests Passing)</div>
+    <button class="start-btn" onclick="revealResume()">
+      <span>⚡</span> RESPAWN INVENTORY (OPEN RESUME)
+    </button>
+  </div>
+
+  <!-- ==========================================
+       MINECRAFT RESUME WINDOW
+       ========================================== -->
+  <div id="resume-container">
+    
+    <!-- Top HUD Bar -->
+    <div class="hud-bar">
+      <div class="hud-left">
+        <div class="hearts-row" title="Full Health — Ready to Ship Code">
+          <div class="pixel-heart"></div>
+          <div class="pixel-heart"></div>
+          <div class="pixel-heart"></div>
+          <div class="pixel-heart"></div>
+          <div class="pixel-heart"></div>
+          <div class="pixel-heart"></div>
+          <div class="pixel-heart"></div>
+          <div class="pixel-heart"></div>
+          <div class="pixel-heart"></div>
+          <div class="pixel-heart"></div>
+        </div>
+        <div class="xp-meter-wrap">
+          <div class="xp-number">Lvl 2026</div>
+          <div class="xp-bar"><div class="xp-fill"></div></div>
+        </div>
+      </div>
+
+      <div class="hud-actions">
+        <a class="mc-mini-btn" href="index.html" title="Return to main portfolio">
+          ⬅ PORTFOLIO
+        </a>
+        <button class="mc-mini-btn" onclick="replayExplosion()" title="Replay the creeper explosion animation">
+          💣 RE-DETONATE
+        </button>
+        <a class="mc-mini-btn" href="https://raw.githubusercontent.com/Classyvaibhav06/portfolio/main/resume.pdf" target="_blank" rel="noopener">
+          📥 GET PDF RESUME
+        </a>
+      </div>
+    </div>
+
+    <!-- Main GUI Window Frame -->
+    <div class="mc-window">
+      
+      <!-- Player Header Card -->
+      <div class="mc-header">
+        <div class="hero-title-box">
+          <h1>VAIBHAV GHOSHI</h1>
+          <div class="badge-role">&sect;a[HERO CLASS]&sect;f Full-Stack Developer &mdash; Web, Backend &amp; GenAI</div>
+          <div class="contact-grid">
+            <a class="contact-tag" href="mailto:vaibhav7290119@gmail.com">
+              <span>📧</span> vaibhav7290119@gmail.com
+            </a>
+            <a class="contact-tag" href="https://vaibhav-ghoshi.in" target="_blank" rel="noopener">
+              <span>🌐</span> vaibhav-ghoshi.in
+            </a>
+            <a class="contact-tag" href="https://github.com/Classyvaibhav06" target="_blank" rel="noopener">
+              <span>🐙</span> Classyvaibhav06
+            </a>
+            <a class="contact-tag" href="https://linkedin.com/in/vaibhav-ghoshi-60467830b" target="_blank" rel="noopener">
+              <span>💼</span> LinkedIn
+            </a>
+          </div>
+        </div>
+
+        <div class="player-card">
+          <div class="player-avatar">🗡️</div>
+          <div class="player-info">
+            <div>&sect;eStatus:&sect;f Ready to Deploy</div>
+            <div>&sect;eSpecialty:&sect;f Next.js + AI</div>
+            <div class="rank">&sect;a[AVAILABLE IMMEDIATELY]</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inventory Navigation Tabs -->
+      <div class="mc-tabs">
+        <button class="tab-btn active" onclick="switchTab('tab-summary', this)">
+          📜 1. LORE &amp; SUMMARY
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-experience', this)">
+          ⚔️ 2. COMPLETED QUESTS
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-projects', this)">
+          🔨 3. BUILDS &amp; SYSTEMS
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-skills', this)">
+          💎 4. INVENTORY / SKILLS
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-education', this)">
+          🎓 5. ACADEMY &amp; STATS
+        </button>
+      </div>
+
+      <!-- ================= TAB 1: SUMMARY / LORE ================= -->
+      <div id="tab-summary" class="tab-pane active">
+        <div class="mc-section-header">
+          <span>PLAYER LORE &amp; OBJECTIVE</span>
+          <span class="sub-badge">CLASS OF 2028</span>
+        </div>
+        <div class="lore-box">
+          <p>
+            &sect;eBTech Artificial Intelligence student&sect;0 (graduating 2028) with 
+            <span class="highlight">two full-stack engineering internships completed in 2026</span>, 
+            including a paid GenAI engineering role at Growzzy Media.
+          </p>
+          <br>
+          <p>
+            Builds scalable production web applications in &sect;2Next.js 15, TypeScript, Node.js&sect;0 and 
+            &sect;2PostgreSQL&sect;0, and architects real-world AI features powered by modern LLM APIs and autonomous agents.
+          </p>
+          <br>
+          <p>
+            &sect;6[CURRENT QUEST]:&sect;0 <strong>Available immediately</strong> for a Software Engineering / Full-Stack / GenAI Internship.
+          </p>
+        </div>
+
+        <div class="mc-section-header">
+          <span>HIGHLIGHT ADVANCEMENTS UNLOCKED</span>
+          <span class="sub-badge">ACHIEVEMENTS</span>
+        </div>
+        <div class="builds-grid">
+          <div class="build-card">
+            <div class="build-card-head">
+              <span class="build-name">🚀 GenAI Pipelines</span>
+              <span class="tech-chip">GROWZZY</span>
+            </div>
+            <div class="build-desc">
+              Integrated LLM APIs, prompt-engineering pipelines, and agent workflows into client-facing platforms.
+            </div>
+          </div>
+          <div class="build-card">
+            <div class="build-card-head">
+              <span class="build-name">🛡️ Cloud &amp; Auth</span>
+              <span class="tech-chip">KIWI CONNECT</span>
+            </div>
+            <div class="build-desc">
+              Constructed RESTful cloud microservices with JWT/bcrypt authentication and secure role-based ACLs.
+            </div>
+          </div>
+          <div class="build-card">
+            <div class="build-card-head">
+              <span class="build-name">🧪 Automated Testing</span>
+              <span class="tech-chip">JK VEGIES</span>
+            </div>
+            <div class="build-desc">
+              Authored 36 automated end-to-end integration tests (jsdom + Supabase adapter mock), 100% green.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TAB 2: EXPERIENCE / QUESTS ================= -->
+      <div id="tab-experience" class="tab-pane">
+        <div class="mc-section-header">
+          <span>INTERNSHIPS &amp; INDUSTRY EXPERIENCE</span>
+          <span class="sub-badge">2 ROLES COMPLETED (2026)</span>
+        </div>
+
+        <!-- Role 1 -->
+        <div class="quest-card">
+          <div class="quest-card-header">
+            <div class="quest-title">
+              <span>🤖</span>
+              <strong>Full-Stack GenAI Intern</strong>
+            </div>
+            <span class="quest-date">Jul 2026 &ndash; Aug 2026</span>
+          </div>
+          <div class="quest-company">Growzzy Media &mdash; AI-powered digital marketing agency</div>
+          <ul class="quest-bullet-list">
+            <li>Developed full-stack web applications integrated with Generative AI models and LLM APIs.</li>
+            <li>Built AI workflows and prompt-engineering pipelines behind interactive agent interfaces.</li>
+            <li>Optimized model response latency and token efficiency on production endpoints.</li>
+            <li>Deployed cloud backends with secure authentication and database integration.</li>
+          </ul>
+          <div class="quest-tech-bar">
+            <span class="tech-chip">Next.js</span>
+            <span class="tech-chip">TypeScript</span>
+            <span class="tech-chip">Node.js</span>
+            <span class="tech-chip">LLM APIs</span>
+            <span class="tech-chip">AI Agents</span>
+            <span class="tech-chip">Prompt Engineering</span>
+          </div>
+        </div>
+
+        <!-- Role 2 -->
+        <div class="quest-card">
+          <div class="quest-card-header">
+            <div class="quest-title">
+              <span>🌐</span>
+              <strong>Full-Stack Web Developer</strong>
+            </div>
+            <span class="quest-date">Apr 2026 &ndash; Jun 2026</span>
+          </div>
+          <div class="quest-company">Kiwi Connect Digital &mdash; Bhopal, India</div>
+          <ul class="quest-bullet-list">
+            <li>Built full-stack applications with RESTful APIs and database integration, deployed to cloud.</li>
+            <li>Implemented JWT and bcrypt authentication with role-based authorization.</li>
+          </ul>
+          <div class="quest-tech-bar">
+            <span class="tech-chip">Node.js</span>
+            <span class="tech-chip">Express</span>
+            <span class="tech-chip">REST APIs</span>
+            <span class="tech-chip">JWT</span>
+            <span class="tech-chip">bcrypt</span>
+            <span class="tech-chip">Cloud Deployment</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TAB 3: PROJECTS / BUILDS ================= -->
+      <div id="tab-projects" class="tab-pane">
+        <div class="mc-section-header">
+          <span>FEATURED BUILDS &amp; ARCHITECTURES</span>
+          <span class="sub-badge">5 MAJOR REPOS</span>
+        </div>
+
+        <div class="builds-grid">
+          
+          <!-- Project 1: GrindSync -->
+          <div class="build-card">
+            <div class="build-card-head">
+              <span class="build-name">⚡ GrindSync</span>
+              <a class="build-link-btn" href="https://grindsync.vercel.app" target="_blank" rel="noopener">
+                ↗ LIVE APP
+              </a>
+            </div>
+            <div class="build-desc">
+              Proof-of-progress platform syncing LeetCode &amp; GitHub activity into weighted developer rankings, with Redis-cached leaderboards and live WebSockets.
+            </div>
+            <div class="quest-tech-bar">
+              <span class="tech-chip">Next.js 15</span>
+              <span class="tech-chip">React 19</span>
+              <span class="tech-chip">Redis</span>
+              <span class="tech-chip">WebSockets</span>
+              <span class="tech-chip">PostgreSQL</span>
+            </div>
+          </div>
+
+          <!-- Project 2: JK Vegies -->
+          <div class="build-card">
+            <div class="build-card-head">
+              <span class="build-name">🥬 JK Vegies</span>
+              <a class="build-link-btn" href="https://github.com/Classyvaibhav06/jv-" target="_blank" rel="noopener">
+                ↗ GITHUB REPO
+              </a>
+            </div>
+            <div class="build-desc">
+              Fresh-produce delivery platform with retail &amp; wholesale carts, checkout, live rider tracking, and Gmail OTP. Tested with 36 automated E2E tests.
+            </div>
+            <div class="quest-tech-bar">
+              <span class="tech-chip">Supabase</span>
+              <span class="tech-chip">PostgreSQL</span>
+              <span class="tech-chip">RLS</span>
+              <span class="tech-chip">jsdom E2E</span>
+            </div>
+          </div>
+
+          <!-- Project 3: DevVegis -->
+          <div class="build-card">
+            <div class="build-card-head">
+              <span class="build-name">🛒 DevVegis</span>
+              <a class="build-link-btn" href="https://devvegis-client.vercel.app" target="_blank" rel="noopener">
+                ↗ STOREFRONT
+              </a>
+            </div>
+            <div class="build-desc">
+              Quick-commerce grocery platform with debounced catalog search, slide-over cart, and relational PostgreSQL modeling through Prisma.
+            </div>
+            <div class="quest-tech-bar">
+              <span class="tech-chip">Next.js 15</span>
+              <span class="tech-chip">TypeScript</span>
+              <span class="tech-chip">Prisma</span>
+              <span class="tech-chip">Tailwind</span>
+            </div>
+          </div>
+
+          <!-- Project 4: Reel Vault -->
+          <div class="build-card">
+            <div class="build-card-head">
+              <span class="build-name">📱 Reel Vault</span>
+              <a class="build-link-btn" href="https://reel.vaibhav-ghoshi.in" target="_blank" rel="noopener">
+                ↗ WEB PWA
+              </a>
+            </div>
+            <div class="build-desc">
+              AI-organized Instagram Reels library. Gemini API automatically generates titles, tags, and semantic categories; includes Android share-sheet capture.
+            </div>
+            <div class="quest-tech-bar">
+              <span class="tech-chip">Gemini API</span>
+              <span class="tech-chip">Next.js</span>
+              <span class="tech-chip">PWA</span>
+            </div>
+          </div>
+
+          <!-- Project 5: Dev Empire -->
+          <div class="build-card">
+            <div class="build-card-head">
+              <span class="build-name">🏰 Dev Empire</span>
+              <a class="build-link-btn" href="https://dev-empire.vercel.app" target="_blank" rel="noopener">
+                ↗ PLAYGROUND
+              </a>
+            </div>
+            <div class="build-desc">
+              Developer learning ecosystem featuring a multi-language code playground, browser execution sandbox, and gamified XP/streak progression.
+            </div>
+            <div class="quest-tech-bar">
+              <span class="tech-chip">React 19</span>
+              <span class="tech-chip">Node.js</span>
+              <span class="tech-chip">Tailwind</span>
+              <span class="tech-chip">Docker</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ================= TAB 4: SKILLS / INVENTORY ================= -->
+      <div id="tab-skills" class="tab-pane">
+        <div class="mc-section-header">
+          <span>EQUIPMENT &amp; ENCHANTMENTS</span>
+          <span class="sub-badge">TECH STACK</span>
+        </div>
+
+        <div class="skills-inventory">
+          
+          <div class="slot-category">
+            <div class="slot-category-title">🗡️ LANGUAGES</div>
+            <div class="item-tags">
+              <span class="item-pill diamond">JavaScript (ESNext)</span>
+              <span class="item-pill diamond">TypeScript</span>
+              <span class="item-pill emerald">Python 3</span>
+              <span class="item-pill gold">C++</span>
+            </div>
+          </div>
+
+          <div class="slot-category">
+            <div class="slot-category-title">🛡️ FRONTEND ARSENAL</div>
+            <div class="item-tags">
+              <span class="item-pill diamond">Next.js 15 (App Router)</span>
+              <span class="item-pill diamond">React 19</span>
+              <span class="item-pill emerald">Tailwind CSS</span>
+              <span class="item-pill">HTML5 &amp; CSS3</span>
+              <span class="item-pill">PWA</span>
+            </div>
+          </div>
+
+          <div class="slot-category">
+            <div class="slot-category-title">⚙️ BACKEND &amp; APIS</div>
+            <div class="item-tags">
+              <span class="item-pill diamond">Node.js</span>
+              <span class="item-pill diamond">Express.js</span>
+              <span class="item-pill emerald">RESTful APIs</span>
+              <span class="item-pill emerald">WebSockets</span>
+              <span class="item-pill gold">JWT &amp; bcrypt Auth</span>
+            </div>
+          </div>
+
+          <div class="slot-category">
+            <div class="slot-category-title">📦 DATABASES &amp; ORM</div>
+            <div class="item-tags">
+              <span class="item-pill diamond">PostgreSQL</span>
+              <span class="item-pill diamond">Supabase</span>
+              <span class="item-pill emerald">Prisma ORM</span>
+              <span class="item-pill emerald">Redis (Cache/PubSub)</span>
+              <span class="item-pill">MySQL</span>
+              <span class="item-pill">MongoDB</span>
+            </div>
+          </div>
+
+          <div class="slot-category">
+            <div class="slot-category-title">🤖 AI &amp; GENAI AGENTS</div>
+            <div class="item-tags">
+              <span class="item-pill diamond">LLM APIs (Gemini, OpenAI)</span>
+              <span class="item-pill diamond">Autonomous AI Agents</span>
+              <span class="item-pill emerald">Prompt Engineering</span>
+              <span class="item-pill emerald">RAG Pipelines</span>
+            </div>
+          </div>
+
+          <div class="slot-category">
+            <div class="slot-category-title">☁️ CLOUD &amp; DEVOPS</div>
+            <div class="item-tags">
+              <span class="item-pill emerald">AWS EC2</span>
+              <span class="item-pill emerald">Docker</span>
+              <span class="item-pill">Vercel &amp; Netlify</span>
+              <span class="item-pill">Git &amp; GitHub</span>
+              <span class="item-pill">CI/CD Pipelines</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ================= TAB 5: ACADEMY & STATS ================= -->
+      <div id="tab-education" class="tab-pane">
+        <div class="mc-section-header">
+          <span>ACADEMIC FOUNDATION &amp; CORE METRICS</span>
+          <span class="sub-badge">INSTITUTION</span>
+        </div>
+
+        <div class="quest-card">
+          <div class="quest-card-header">
+            <div class="quest-title">
+              <span>🎓</span>
+              <strong>BTech in Artificial Intelligence</strong>
+            </div>
+            <span class="quest-date">Aug 2024 &ndash; Feb 2028</span>
+          </div>
+          <div class="quest-company">
+            Technocrats Institute of Technology (TIT), Bhopal &nbsp;|&nbsp; 
+            <span style="color: #007700; font-weight: bold;">CGPA: 7.5</span>
+          </div>
+          <div class="lore-box" style="margin-bottom:0; font-size: 20px;">
+            <p><strong>Core Disciplines Mastered:</strong></p>
+            <p>&bull; Data Structures &amp; Algorithms</p>
+            <p>&bull; Database Management Systems (DBMS)</p>
+            <p>&bull; Operating Systems &amp; Concurrency</p>
+            <p>&bull; Computer Networks &amp; Security</p>
+          </div>
+        </div>
+
+        <div class="mc-section-header" style="margin-top: 20px;">
+          <span>SPECIAL SERVER STATS</span>
+          <span class="sub-badge">ATTRIBUTES</span>
+        </div>
+        <div class="builds-grid">
+          <div class="build-card">
+            <div class="build-card-head"><span class="build-name">⚔️ Availability</span></div>
+            <div class="build-desc">&sect;2IMMEDIATE (0 days cooldown)&sect;0 &mdash; Ready for internships &amp; full-time contracts.</div>
+          </div>
+          <div class="build-card">
+            <div class="build-card-head"><span class="build-name">🛡️ Experience Level</span></div>
+            <div class="build-desc">2 real internships completed in 2026 with production deployments.</div>
+          </div>
+          <div class="build-card">
+            <div class="build-card-head"><span class="build-name">🎯 Work Style</span></div>
+            <div class="build-desc">Autonomy, clean code architecture, 0 fake placeholders, solid testing.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Window Footer -->
+      <div class="mc-footer">
+        <div>Crafted for Vaibhav Ghoshi &bull; Real Experience &bull; ATS Ready</div>
+        <div>Coordinates: [X: 2026, Y: 64, Z: 2028] &bull; Biome: Full-Stack</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // AUDIO SYNTHESIS ENGINE (Web Audio API)
+    // 100% self-contained: no external audio dependencies!
+    // ==========================================
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function toggleAudio() {
+      soundEnabled = !soundEnabled;
+      const icon = document.getElementById('sound-icon');
+      const label = document.getElementById('sound-label');
+      if (soundEnabled) {
+        initAudio();
+        icon.textContent = '🔊';
+        label.textContent = 'SOUND: SYNTH MC SFX (ON)';
+      } else {
+        icon.textContent = '🔇';
+        label.textContent = 'SOUND: MUTED';
+      }
+    }
+
+    // Play Creeper Hiss (Resonant bandpass white noise with ramp)
+    function playHissSound(duration = 1.8) {
+      if (!soundEnabled) return;
+      initAudio();
+
+      const bufferSize = audioCtx.sampleRate * duration;
+      const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+
+      const whiteNoise = audioCtx.createBufferSource();
+      whiteNoise.buffer = noiseBuffer;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(2800, audioCtx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(4600, audioCtx.currentTime + duration);
+      filter.Q.setValueAtTime(3.6, audioCtx.currentTime);
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.75, audioCtx.currentTime + duration * 0.7);
+      gain.gain.linearRampToValueAtTime(1.1, audioCtx.currentTime + duration);
+
+      whiteNoise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      whiteNoise.start();
+    }
+
+    // Play Massive Explosion Sound (Sub bass sine + distorted noise blast)
+    function playExplosionSound() {
+      if (!soundEnabled) return;
+      initAudio();
+
+      const now = audioCtx.currentTime;
+
+      // 1. Noise burst
+      const noiseDuration = 1.5;
+      const bufferSize = audioCtx.sampleRate * noiseDuration;
+      const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = noiseBuffer;
+
+      const lowpass = audioCtx.createBiquadFilter();
+      lowpass.type = 'lowpass';
+      lowpass.frequency.setValueAtTime(1800, now);
+      lowpass.frequency.exponentialRampToValueAtTime(70, now + noiseDuration);
+
+      const noiseGain = audioCtx.createGain();
+      noiseGain.gain.setValueAtTime(1.6, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.01, now + noiseDuration);
+
+      noise.connect(lowpass);
+      lowpass.connect(noiseGain);
+      noiseGain.connect(audioCtx.destination);
+      noise.start(now);
+
+      // 2. Deep sub bass rumble
+      const osc = audioCtx.createOscillator();
+      const oscGain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(130, now);
+      osc.frequency.exponentialRampToValueAtTime(22, now + 1.3);
+
+      oscGain.gain.setValueAtTime(1.3, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.01, now + 1.3);
+
+      osc.connect(oscGain);
+      oscGain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 1.4);
+    }
+
+    // Play Click / Item sound
+    function playClickSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.06);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.06);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.07);
+    }
+
+    // Play Level Up / Achievement Chime
+    function playLevelUpChime() {
+      if (!soundEnabled) return;
+      initAudio();
+      const notes = [330, 392, 494, 659]; // E4, G4, B4, E5
+      notes.forEach((freq, idx) => {
+        const startTime = audioCtx.currentTime + idx * 0.08;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, startTime);
+        gain.gain.setValueAtTime(0.4, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.4);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + 0.45);
+      });
+    }
+
+    // ==========================================
+    // PURE 2D CANVAS 3D VOXEL RENDERING ENGINE
+    // 100% Guaranteed Compatibility: Works in all webviews,
+    // iframes, and browsers without requiring WebGL!
+    // ==========================================
+    const canvas = document.getElementById('voxel-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // 3D Camera settings
+    const CAM = {
+      cx: 270,
+      cy: 195,
+      fov: 340,
+      dist: 58,
+      pitch: 0.22, // slight top-down view angle
+      yaw: 0.38   // slight heroic 3/4 isometric perspective
+    };
+
+    // 3D projection math
+    function projectPoint(x, y, z, customPitch = CAM.pitch, customYaw = CAM.yaw) {
+      // 1. Rotate Y (yaw)
+      const cosY = Math.cos(customYaw), sinY = Math.sin(customYaw);
+      const x1 = x * cosY - z * sinY;
+      const z1 = x * sinY + z * cosY;
+
+      // 2. Rotate X (pitch)
+      const cosP = Math.cos(customPitch), sinP = Math.sin(customPitch);
+      const y2 = y * cosP - z1 * sinP;
+      const z2 = y * sinP + z1 * cosP;
+
+      // 3. Perspective projection
+      const depth = z2 + CAM.dist;
+      const scale = CAM.fov / Math.max(1, depth);
+      return {
+        px: CAM.cx + x1 * scale,
+        py: CAM.cy - y2 * scale,
+        depth: depth,
+        scale: scale
+      };
+    }
+
+    // Palette of authentic pixel greens
+    const GREENS = ['#4ca630', '#3b8b24', '#2c731a', '#1e5411', '#5dc23b', '#2f6d1b'];
+    function pickGreen() {
+      return GREENS[Math.floor(Math.random() * GREENS.length)];
+    }
+
+    // Creeper 8x8 Front Face Grid Matrix
+    const CREEPER_FACE_GRID = [
+      [1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 1, 1, 0, 0, 1],
+      [1, 0, 0, 1, 1, 0, 0, 1],
+      [1, 1, 1, 0, 0, 1, 1, 1],
+      [1, 1, 0, 0, 0, 0, 1, 1],
+      [1, 1, 0, 0, 0, 0, 1, 1],
+      [1, 1, 0, 1, 1, 0, 1, 1]
+    ];
+
+    // Helper: linear interpolate 2D point
+    function lerpPoint(p1, p2, t) {
+      return { px: p1.px + (p2.px - p1.px) * t, py: p1.py + (p2.py - p1.py) * t };
+    }
+
+    // Draw a single 3D Box in perspective with shaded faces
+    function draw3DBox({
+      x = 0, y = 0, z = 0,
+      w = 8, h = 8, d = 8,
+      pitch = CAM.pitch,
+      yaw = CAM.yaw,
+      topColor = '#4ca630',
+      frontColor = '#3b8b24',
+      rightColor = '#2c731a',
+      leftColor = '#266517',
+      isHead = false,
+      isSolidWhite = false
+    }) {
+      const hw = w / 2, hh = h / 2, hd = d / 2;
+
+      // 8 local box vertices
+      const v = [
+        projectPoint(x - hw, y - hh, z - hd, pitch, yaw), // 0: BLB
+        projectPoint(x + hw, y - hh, z - hd, pitch, yaw), // 1: BRB
+        projectPoint(x + hw, y + hh, z - hd, pitch, yaw), // 2: TRB
+        projectPoint(x - hw, y + hh, z - hd, pitch, yaw), // 3: TLB
+        projectPoint(x - hw, y - hh, z + hd, pitch, yaw), // 4: BLF
+        projectPoint(x + hw, y - hh, z + hd, pitch, yaw), // 5: BRF
+        projectPoint(x + hw, y + hh, z + hd, pitch, yaw), // 6: TRF
+        projectPoint(x - hw, y + hh, z + hd, pitch, yaw)  // 7: TLF
+      ];
+
+      // Define all 6 box faces with counter-clockwise winding looking from outside
+      const faces = [
+        { name: 'top',    idx: [7, 6, 2, 3], col: isSolidWhite ? '#ffffff' : topColor,   depth: (v[7].depth+v[6].depth+v[2].depth+v[3].depth)/4 },
+        { name: 'front',  idx: [4, 5, 6, 7], col: isSolidWhite ? '#ffffff' : frontColor, depth: (v[4].depth+v[5].depth+v[6].depth+v[7].depth)/4 },
+        { name: 'right',  idx: [5, 1, 2, 6], col: isSolidWhite ? '#ffffff' : rightColor, depth: (v[5].depth+v[1].depth+v[2].depth+v[6].depth)/4 },
+        { name: 'left',   idx: [0, 4, 7, 3], col: isSolidWhite ? '#ffffff' : leftColor,  depth: (v[0].depth+v[4].depth+v[7].depth+v[3].depth)/4 },
+        { name: 'back',   idx: [1, 0, 3, 2], col: isSolidWhite ? '#ffffff' : leftColor,  depth: (v[1].depth+v[0].depth+v[3].depth+v[2].depth)/4 },
+        { name: 'bottom', idx: [0, 1, 5, 4], col: isSolidWhite ? '#ffffff' : leftColor,  depth: (v[0].depth+v[1].depth+v[5].depth+v[4].depth)/4 }
+      ];
+
+      // Sort faces back-to-front (painter's algorithm)
+      faces.sort((a, b) => b.depth - a.depth);
+
+      faces.forEach(f => {
+        const [i0, i1, i2, i3] = f.idx;
+        const p0 = v[i0], p1 = v[i1], p2 = v[i2], p3 = v[i3];
+
+        // 2D Cross Product for Backface Culling (visible when cp < 0)
+        const cp = (p1.px - p0.px) * (p2.py - p0.py) - (p1.py - p0.py) * (p2.px - p0.px);
+        if (cp < 0) {
+          // Face is visible!
+          ctx.beginPath();
+          ctx.moveTo(p0.px, p0.py);
+          ctx.lineTo(p1.px, p1.py);
+          ctx.lineTo(p2.px, p2.py);
+          ctx.lineTo(p3.px, p3.py);
+          ctx.closePath();
+          ctx.fillStyle = f.col;
+          ctx.fill();
+          ctx.strokeStyle = isSolidWhite ? '#ffffff' : '#0d1808';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+
+          // Render Creeper Face on the Front quad if this is the Head!
+          if (isHead && f.name === 'front' && !isSolidWhite) {
+            renderFacePixels(p3, p2, p1, p0); // TL, TR, BR, BL
+          }
+        }
+      });
+    }
+
+    // Draw the 8x8 Creeper face grid onto the projected front quadrilateral
+    function renderFacePixels(tl, tr, br, bl) {
+      for (let r = 0; r < 8; r++) {
+        const vTop = r / 8, vBot = (r + 1) / 8;
+        const pL_top = lerpPoint(tl, bl, vTop);
+        const pL_bot = lerpPoint(tl, bl, vBot);
+        const pR_top = lerpPoint(tr, br, vTop);
+        const pR_bot = lerpPoint(tr, br, vBot);
+
+        for (let c = 0; c < 8; c++) {
+          const uLeft = c / 8, uRight = (c + 1) / 8;
+          const ptTL = lerpPoint(pL_top, pR_top, uLeft);
+          const ptTR = lerpPoint(pL_top, pR_top, uRight);
+          const ptBR = lerpPoint(pL_bot, pR_bot, uRight);
+          const ptBL = lerpPoint(pL_bot, pR_bot, uLeft);
+
+          const isMouthOrEye = (CREEPER_FACE_GRID[r][c] === 0);
+
+          ctx.beginPath();
+          ctx.moveTo(ptTL.px, ptTL.py);
+          ctx.lineTo(ptTR.px, ptTR.py);
+          ctx.lineTo(ptBR.px, ptBR.py);
+          ctx.lineTo(ptBL.px, ptBL.py);
+          ctx.closePath();
+
+          if (isMouthOrEye) {
+            ctx.fillStyle = '#0a0d09';
+          } else {
+            // Mottled pixel camo green
+            ctx.fillStyle = ((r + c) % 2 === 0) ? '#4ca630' : '#388b24';
+          }
+          ctx.fill();
+        }
+      }
+    }
+
+    // ==========================================
+    // CREEPER STATE & ANIMATION
+    // ==========================================
+    let isPriming = false;
+    let primeStartTime = 0;
+    let autoCountdown = 4;
+    let autoTimer = null;
+    let mouseX = 0, mouseY = 0;
+
+    // Track mouse for head rotation
+    const stageBox = document.getElementById('voxel-stage');
+    stageBox.addEventListener('mousemove', (e) => {
+      const rect = stageBox.getBoundingClientRect();
+      mouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouseY = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+    });
+
+    // 3D Voxel Debris for Explosion
+    let debris = [];
+    const DEBRIS_COLORS = [
+      '#4ca630', '#3b8b24', '#2c731a', '#1e5411', '#5dc23b', // Creeper greens
+      '#0a0d09', '#151c14',                                   // Black face voxels
+      '#866043', '#5b3e2b',                                   // Dirt brown
+      '#55aa2b', '#489c24',                                   // Grass
+      '#ffffff', '#ffeedd', '#ffaa00', '#ff3300'              // Sparks & embers
+    ];
+
+    function spawnDebris() {
+      debris = [];
+      for (let i = 0; i < 140; i++) {
+        const phi = Math.random() * Math.PI * 0.75;
+        const theta = Math.random() * Math.PI * 2;
+        const speed = 12 + Math.random() * 26;
+        debris.push({
+          x: (Math.random() - 0.5) * 8,
+          y: 4 + Math.random() * 16,
+          z: (Math.random() - 0.5) * 6,
+          vx: Math.sin(phi) * Math.cos(theta) * speed,
+          vy: Math.cos(phi) * speed + 10, // strong upward impulse
+          vz: Math.sin(phi) * Math.sin(theta) * speed,
+          size: 1.2 + Math.random() * 1.4,
+          color: DEBRIS_COLORS[Math.floor(Math.random() * DEBRIS_COLORS.length)],
+          gravity: 36,
+          life: 2.2,
+          bounces: 0
+        });
+      }
+    }
+
+    // Smoke particles for fuse during priming
+    let smoke = [];
+    function spawnSmoke() {
+      smoke.push({
+        x: (Math.random() - 0.5) * 6,
+        y: 18 + Math.random() * 2,
+        z: (Math.random() - 0.5) * 6,
+        vy: 4 + Math.random() * 6,
+        vx: (Math.random() - 0.5) * 3,
+        vz: (Math.random() - 0.5) * 3,
+        size: 1.4 + Math.random() * 1.0,
+        life: 1.0,
+        decay: 1.6 + Math.random() * 0.8
+      });
+    }
+
+    // MAIN RENDER & ANIMATION LOOP
+    let lastTime = performance.now();
+
+    function renderLoop(now) {
+      requestAnimationFrame(renderLoop);
+
+      const dt = Math.min(0.1, (now - lastTime) / 1000);
+      lastTime = now;
+      const t = now / 1000;
+
+      // Clear Canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw Atmospheric Background
+      const bgGrad = ctx.createRadialGradient(270, 160, 40, 270, 180, 320);
+      bgGrad.addColorStop(0, '#1c2d18');
+      bgGrad.addColorStop(0.7, '#0f170d');
+      bgGrad.addColorStop(1, '#050804');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Star particles in background
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      for (let s = 0; s < 18; s++) {
+        const sx = (s * 87) % 540;
+        const sy = (s * 43) % 200;
+        ctx.fillRect(sx, sy, 2, 2);
+      }
+
+      // --- 1. DRAW 3D GRASS PLATFORM ---
+      draw3DBox({
+        x: 0, y: -4, z: 0,
+        w: 30, h: 8, d: 26,
+        topColor: '#529e28',
+        frontColor: '#6e4b33',
+        rightColor: '#583c29',
+        leftColor: '#583c29'
+      });
+
+      // --- 2. DRAW 3D CREEPER OR DEBRIS ---
+      if (debris.length > 0) {
+        // RENDER EXPLOSION DEBRIS VOXELS
+        debris.sort((a, b) => b.z - a.z);
+        for (let i = debris.length - 1; i >= 0; i--) {
+          const d = debris[i];
+          d.vy -= d.gravity * dt;
+          d.x += d.vx * dt;
+          d.y += d.vy * dt;
+          d.z += d.vz * dt;
+
+          // Bounce off grass platform
+          if (d.y <= 0 && d.vy < 0) {
+            d.y = 0;
+            d.vy = -d.vy * 0.4;
+            d.vx *= 0.7;
+            d.vz *= 0.7;
+            d.bounces++;
+          }
+          d.life -= dt;
+
+          const p = projectPoint(d.x, d.y, d.z);
+          const sz = d.size * p.scale;
+          if (p.depth > 0 && d.life > 0) {
+            ctx.fillStyle = d.color;
+            ctx.fillRect(p.px - sz / 2, p.py - sz / 2, sz, sz);
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.fillRect(p.px - sz / 2 + 1, p.py - sz / 2 + 1, sz - 1, sz - 1);
+          }
+
+          if (d.life <= 0) {
+            debris.splice(i, 1);
+          }
+        }
+      } else {
+        // RENDER 3D CREEPER MOB
+        let legSwing = 0;
+        let bobY = 0;
+        let headYawOffset = mouseX * 0.25;
+        let headPitchOffset = -mouseY * 0.15;
+        let creeperScale = 1.0;
+        let isSolidWhite = false;
+        let jitterX = 0, jitterZ = 0;
+
+        if (!isPriming) {
+          // Walking cycle
+          legSwing = Math.sin(t * 6.0) * 4.0;
+          bobY = Math.abs(Math.sin(t * 6.0)) * 0.6;
+        } else {
+          // Priming / Swell cycle
+          const elapsed = (performance.now() - primeStartTime) / 1000;
+          const prog = Math.min(1.0, elapsed / 1.8);
+
+          // 3D Swelling
+          creeperScale = 1.0 + Math.pow(prog, 1.5) * 0.75;
+
+          // Shaking
+          const amp = prog * 0.8;
+          jitterX = (Math.random() - 0.5) * amp;
+          jitterZ = (Math.random() - 0.5) * amp;
+
+          // Accelerating white flash
+          const freq = 4 + prog * 22;
+          isSolidWhite = Math.sin(t * freq * Math.PI) > 0;
+
+          // Head locks onto player
+          headYawOffset = 0;
+          headPitchOffset = 0;
+
+          // Fuse smoke
+          if (Math.random() < 0.6 + prog * 0.4) {
+            spawnSmoke();
+          }
+        }
+
+        const cx = jitterX;
+        const cz = jitterZ;
+        const S = creeperScale;
+
+        // Base colors
+        const topC = isSolidWhite ? '#ffffff' : '#4ca630';
+        const frontC = isSolidWhite ? '#ffffff' : '#388b24';
+        const rightC = isSolidWhite ? '#ffffff' : '#2c731a';
+        const leftC = isSolidWhite ? '#ffffff' : '#266517';
+
+        // --- 4 LEGS ---
+        // Front-Left (Z+ X-)
+        draw3DBox({
+          x: cx - 2.2 * S,
+          y: (3.0) * S,
+          z: cz + (2.2 + (!isPriming ? legSwing * 0.5 : 0)) * S,
+          w: 4 * S, h: 6 * S, d: 4 * S,
+          topColor: topC, frontColor: frontC, rightColor: rightC, leftColor: leftC,
+          isSolidWhite: isSolidWhite
+        });
+
+        // Front-Right (Z+ X+)
+        draw3DBox({
+          x: cx + 2.2 * S,
+          y: (3.0) * S,
+          z: cz + (2.2 - (!isPriming ? legSwing * 0.5 : 0)) * S,
+          w: 4 * S, h: 6 * S, d: 4 * S,
+          topColor: topC, frontColor: frontC, rightColor: rightC, leftColor: leftC,
+          isSolidWhite: isSolidWhite
+        });
+
+        // Back-Left (Z- X-)
+        draw3DBox({
+          x: cx - 2.2 * S,
+          y: (3.0) * S,
+          z: cz + (-2.2 - (!isPriming ? legSwing * 0.5 : 0)) * S,
+          w: 4 * S, h: 6 * S, d: 4 * S,
+          topColor: topC, frontColor: frontC, rightColor: rightC, leftColor: leftC,
+          isSolidWhite: isSolidWhite
+        });
+
+        // Back-Right (Z- X+)
+        draw3DBox({
+          x: cx + 2.2 * S,
+          y: (3.0) * S,
+          z: cz + (-2.2 + (!isPriming ? legSwing * 0.5 : 0)) * S,
+          w: 4 * S, h: 6 * S, d: 4 * S,
+          topColor: topC, frontColor: frontC, rightColor: rightC, leftColor: leftC,
+          isSolidWhite: isSolidWhite
+        });
+
+        // --- TORSO BODY ---
+        draw3DBox({
+          x: cx,
+          y: (11.0 + bobY) * S,
+          z: cz,
+          w: 8 * S, h: 10 * S, d: 4 * S,
+          topColor: topC, frontColor: frontC, rightColor: rightC, leftColor: leftC,
+          isSolidWhite: isSolidWhite
+        });
+
+        // --- HEAD (with Authentic 8x8 Creeper Face) ---
+        draw3DBox({
+          x: cx,
+          y: (19.5 + bobY) * S,
+          z: cz,
+          w: 8.5 * S, h: 8.5 * S, d: 8.5 * S,
+          yaw: CAM.yaw + headYawOffset,
+          pitch: CAM.pitch + headPitchOffset,
+          topColor: topC, frontColor: frontC, rightColor: rightC, leftColor: leftC,
+          isHead: true,
+          isSolidWhite: isSolidWhite
+        });
+
+        // Render Fuse Smoke particles
+        for (let i = smoke.length - 1; i >= 0; i--) {
+          const sm = smoke[i];
+          sm.y += sm.vy * dt;
+          sm.x += sm.vx * dt;
+          sm.z += sm.vz * dt;
+          sm.life -= sm.decay * dt;
+
+          const pt = projectPoint(sm.x, sm.y, sm.z);
+          const sz = sm.size * pt.scale;
+          if (pt.depth > 0 && sm.life > 0) {
+            ctx.fillStyle = `rgba(220, 220, 220, ${Math.max(0, sm.life * 0.75)})`;
+            ctx.fillRect(pt.px - sz / 2, pt.py - sz / 2, sz, sz);
+          }
+          if (sm.life <= 0) smoke.splice(i, 1);
+        }
+      }
+    }
+
+    // ==========================================
+    // DETONATION & STAGE PROGRESSION
+    // ==========================================
+    function startAutoTimer() {
+      const statusText = document.getElementById('status-text');
+      autoTimer = setInterval(() => {
+        if (isPriming) {
+          clearInterval(autoTimer);
+          return;
+        }
+        autoCountdown--;
+        if (autoCountdown > 0) {
+          statusText.textContent = `AUTO-IGNITING IN ${autoCountdown}s... (OR CLICK TO DETONATE)`;
+        } else {
+          clearInterval(autoTimer);
+          igniteCreeper();
+        }
+      }, 1000);
+    }
+
+    function igniteCreeper() {
+      if (autoTimer) clearInterval(autoTimer);
+      if (isPriming) return;
+      isPriming = true;
+      primeStartTime = performance.now();
+      initAudio();
+
+      const bubble = document.getElementById('creeper-bubble');
+      const btn = document.getElementById('ignite-btn');
+      const statusText = document.getElementById('status-text');
+
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+      statusText.textContent = 'WARNING: 3D CREEPER PRIMED! DETONATION IMMINENT...';
+      statusText.style.color = '#ff5555';
+
+      bubble.style.display = 'block';
+
+      // Start Web Audio hiss
+      playHissSound(1.8);
+
+      // Trigger detonation at 1.8s
+      setTimeout(() => {
+        executeExplosion();
+      }, 1800);
+    }
+
+    function executeExplosion() {
+      // 1. Play Explosion Audio
+      playExplosionSound();
+
+      // 2. Spawn 3D Voxel Debris
+      spawnDebris();
+
+      // 3. Screen Flash & Hard Shake
+      const flash = document.getElementById('flash-overlay');
+      flash.style.opacity = '1';
+      document.body.classList.add('shake-hard');
+
+      setTimeout(() => {
+        flash.style.opacity = '0';
+      }, 120);
+
+      setTimeout(() => {
+        document.body.classList.remove('shake-hard');
+      }, 600);
+
+      // 4. Transition to Death Banner after debris burst
+      setTimeout(() => {
+        const intro = document.getElementById('intro-screen');
+        intro.style.display = 'none';
+
+        const deathBanner = document.getElementById('death-banner');
+        deathBanner.style.display = 'flex';
+
+        // Auto reveal resume after dramatic death screen
+        setTimeout(() => {
+          revealResume();
+        }, 1500);
+      }, 700);
+    }
+
+    function revealResume() {
+      const deathBanner = document.getElementById('death-banner');
+      deathBanner.style.display = 'none';
+
+      const resume = document.getElementById('resume-container');
+      resume.style.display = 'block';
+      setTimeout(() => {
+        resume.classList.add('visible');
+        playLevelUpChime();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 50);
+    }
+
+    function replayExplosion() {
+      if (autoTimer) clearInterval(autoTimer);
+      playClickSound();
+
+      debris = [];
+      smoke = [];
+
+      const resume = document.getElementById('resume-container');
+      resume.classList.remove('visible');
+      resume.style.display = 'none';
+
+      const intro = document.getElementById('intro-screen');
+      intro.style.display = 'flex';
+      intro.style.opacity = '1';
+
+      document.getElementById('creeper-bubble').style.display = 'none';
+
+      const btn = document.getElementById('ignite-btn');
+      btn.disabled = false;
+      btn.style.opacity = '1';
+
+      const statusText = document.getElementById('status-text');
+      statusText.textContent = '3D CREEPER RESPAWNED! READY FOR DETONATION.';
+      statusText.style.color = '#aaaaaa';
+
+      isPriming = false;
+      autoCountdown = 5;
+      startAutoTimer();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ==========================================
+    // TAB SWITCHING
+    // ==========================================
+    function switchTab(tabId, btnElem) {
+      playClickSound();
+      
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      if (btnElem) btnElem.classList.add('active');
+
+      document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+      const target = document.getElementById(tabId);
+      if (target) {
+        target.classList.add('active');
+      }
+    }
+
+    // Start 2D Canvas 3D render loop immediately
+    function startApp() {
+      renderLoop(performance.now());
+      startAutoTimer();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startApp);
+    } else {
+      startApp();
+    }
+    // Fallback: draw frame 0 immediately
+    try {
+      renderLoop(performance.now());
+    } catch (e) {
+      console.error(e);
+    }
+  </script>
+</body>
+</html>

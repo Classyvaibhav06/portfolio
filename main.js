@@ -114,10 +114,14 @@
 
       if (isTyping(event.target)) return;
 
-      const index = '123456'.indexOf(event.key);
+      const index = '1234567'.indexOf(event.key);
       if (index === -1) return;
       const slot = hotbarSlots[index];
       if (!slot) return;
+      if (slot.getAttribute('href') && slot.getAttribute('href').endsWith('.html')) {
+        window.location.href = slot.getAttribute('href');
+        return;
+      }
       const id = slot.dataset && slot.dataset.target;
       const target = id ? document.getElementById(id) : null;
       if (!target) return;
