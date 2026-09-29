@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vaibhav Ghoshi — Full-Stack Developer</title>
+<meta name="description" content="Vaibhav Ghoshi, full-stack developer working in Next.js, TypeScript, Node.js, PostgreSQL and GenAI APIs. Two full-stack internships completed in 2026. Available immediately for a software engineering internship.">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="Vaibhav Ghoshi — Full-Stack Developer">
+<meta property="og:description" content="Web, backend and GenAI engineering. Projects, experience and contact.">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script defer src="main.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- decorative sky layer: starfield drawn by JS -->
+<div class="world-bg" aria-hidden="true">
+  <div class="stars" id="stars"></div>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="#home">
+    <img src="assets/avatar.svg" width="32" height="32" alt="" class="brand-avatar">
+    <span class="brand-name">VAIBHAV&nbsp;GHOSHI</span>
+  </a>
+  <p class="topbar-status"><span class="heart" aria-hidden="true"></span> Available immediately</p>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="home" aria-labelledby="hero-title">
+    <div class="hero-avatar-frame">
+      <img src="assets/avatar.svg" width="176" height="176" alt="Pixel-art portrait of Vaibhav Ghoshi" class="hero-avatar">
+    </div>
+    <div class="hero-copy">
+      <p class="hero-eyebrow">Player one</p>
+      <h1 class="hero-title" id="hero-title">Vaibhav Ghoshi</h1>
+      <p class="hero-role">Full-Stack Developer &mdash; Web, Backend &amp; GenAI</p>
+      <p class="hero-blurb">
+        BTech Artificial Intelligence student (2028) with two full-stack internships completed in 2026,
+        including a paid GenAI engineering role. I build production web applications in Next.js,
+        TypeScript, Node.js and PostgreSQL, and ship AI features on LLM APIs.
+      </p>
+      <div class="hero-actions">
+        <a class="mc-btn mc-btn-primary" href="https://raw.githubusercontent.com/Classyvaibhav06/portfolio/main/resume.pdf">Download resume</a>
+        <a class="mc-btn" href="mailto:vaibhav7290119@gmail.com">Email me</a>
+      </div>
+      <ul class="hero-links">
+        <li><a href="https://github.com/Classyvaibhav06">github.com/Classyvaibhav06</a></li>
+        <li><a href="https://linkedin.com/in/vaibhav-ghoshi-60467830b">linkedin.com/in/vaibhav-ghoshi-60467830b</a></li>
+        <li><a href="https://vaibhav-ghoshi.in">vaibhav-ghoshi.in</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS (inventory) ============ -->
+  <section class="section" id="projects" aria-labelledby="projects-title">
+    <div class="section-head">
+      <h2 class="mc-h" id="projects-title">Projects</h2>
+      <p class="section-sub">Five things I built and shipped. Hover a slot for the details.</p>
+    </div>
+
+    <div class="inventory" role="list">
+      <article class="slot" role="listitem" tabindex="0" data-item="grindsync">
+        <img class="slot-icon" src="assets/items/grindsync.svg" width="48" height="48" alt="">
+        <span class="slot-label">GrindSync</span>
+        <div class="tooltip" role="note">
+          <p class="tooltip-name">GrindSync</p>
+          <p class="tooltip-kind">Proof-of-progress platform for developers</p>
+          <p class="tooltip-lore">Syncs LeetCode and GitHub activity into a weighted developer ranking, with Redis-cached leaderboards and real-time WebSocket updates.</p>
+          <p class="tooltip-tech">Next.js 15 · React 19 · Node.js · Redis · WebSockets · PostgreSQL</p>
+          <a class="tooltip-link" href="https://grindsync.vercel.app">grindsync.vercel.app</a>
+        </div>
+      </article>
+
+      <article class="slot" role="listitem" tabindex="0" data-item="jkvegies">
+        <img class="slot-icon" src="assets/items/jkvegies.svg" width="48" height="48" alt="">
+        <span class="slot-label">JK Vegies</span>
+        <div class="tooltip" role="note">
+          <p class="tooltip-name">JK Vegies</p>
+          <p class="tooltip-kind">Fresh-produce delivery platform</p>
+          <p class="tooltip-lore">Retail and wholesale ordering with cart, checkout, live rider tracking and Gmail OTP sign-in. 36 automated end-to-end tests, all passing.</p>
+          <p class="tooltip-tech">Supabase · PostgreSQL · JavaScript · RLS · jsdom</p>
+          <a class="tooltip-link" href="https://github.com/Classyvaibhav06/jv-">github.com/Classyvaibhav06/jv-</a>
+        </div>
+      </article>
+
+      <article class="slot" role="listitem" tabindex="0" data-item="devvegis">
+        <img class="slot-icon" src="assets/items/devvegis.svg" width="48" height="48" alt="">
+        <span class="slot-label">DevVegis</span>
+        <div class="tooltip" role="note">
+          <p class="tooltip-name">DevVegis</p>
+          <p class="tooltip-kind">Quick-commerce grocery platform</p>
+          <p class="tooltip-lore">Storefront with debounced search and slide-over cart; models orders, catalogs and inventory in PostgreSQL through Prisma.</p>
+          <p class="tooltip-tech">Next.js 15 · TypeScript · Tailwind · PostgreSQL · Prisma · Express</p>
+          <a class="tooltip-link" href="https://devvegis-client.vercel.app">devvegis-client.vercel.app</a>
+        </div>
+      </article>
+
+      <article class="slot" role="listitem" tabindex="0" data-item="reelvault">
+        <img class="slot-icon" src="assets/items/reelvault.svg" width="48" height="48" alt="">
+        <span class="slot-label">Reel Vault</span>
+        <div class="tooltip" role="note">
+          <p class="tooltip-name">Reel Vault</p>
+          <p class="tooltip-kind">AI-organized Instagram Reels library</p>
+          <p class="tooltip-lore">Gemini API auto-generates titles, captions and tags; installable PWA with Android share-sheet capture.</p>
+          <p class="tooltip-tech">Next.js · TypeScript · Gemini API · PWA</p>
+          <a class="tooltip-link" href="https://reel.vaibhav-ghoshi.in">reel.vaibhav-ghoshi.in</a>
+        </div>
+      </article>
+
+      <article class="slot" role="listitem" tabindex="0" data-item="devempire">
+        <img class="slot-icon" src="assets/items/devempire.svg" width="48" height="48" alt="">
+        <span class="slot-label">Dev Empire</span>
+        <div class="tooltip" role="note">
+          <p class="tooltip-name">Dev Empire</p>
+          <p class="tooltip-kind">Developer learning ecosystem</p>
+          <p class="tooltip-lore">Multi-language code playground, live web sandbox and gamified XP/streak progression system.</p>
+          <p class="tooltip-tech">React 19 · Node.js · Tailwind · Docker</p>
+          <a class="tooltip-link" href="https://dev-empire.vercel.app">dev-empire.vercel.app</a>
+        </div>
+      </article>
+
+      <div class="slot slot-empty" aria-hidden="true"></div>
+      <div class="slot slot-empty" aria-hidden="true"></div>
+      <div class="slot slot-empty" aria-hidden="true"></div>
+      <div class="slot slot-empty" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section class="section" id="experience" aria-labelledby="experience-title">
+    <div class="section-head">
+      <h2 class="mc-h" id="experience-title">Experience</h2>
+      <p class="section-sub">Two full-stack internships, both completed in 2026.</p>
+    </div>
+
+    <ol class="quests">
+      <li class="quest panel">
+        <div class="quest-head">
+          <h3 class="quest-title">Full-Stack GenAI Intern</h3>
+          <p class="quest-meta">Growzzy Media &mdash; AI-powered digital marketing agency</p>
+          <p class="quest-date">Jul 2026 &ndash; Aug 2026</p>
+        </div>
+        <ul class="quest-log">
+          <li>Developed full-stack web applications integrated with Generative AI models and LLM APIs.</li>
+          <li>Built AI workflows and prompt-engineering pipelines behind interactive agent interfaces.</li>
+          <li>Optimized model response latency and token efficiency on production endpoints.</li>
+          <li>Deployed cloud backends with secure authentication and database integration.</li>
+        </ul>
+        <p class="quest-tech">Next.js · TypeScript · Node.js · LLM APIs · AI agents</p>
+      </li>
+
+      <li class="quest panel">
+        <div class="quest-head">
+          <h3 class="quest-title">Full-Stack Web Developer</h3>
+          <p class="quest-meta">Kiwi Connect Digital &mdash; Bhopal, India</p>
+          <p class="quest-date">Apr 2026 &ndash; Jun 2026</p>
+        </div>
+        <ul class="quest-log">
+          <li>Built full-stack applications with RESTful APIs and database integration, deployed to cloud.</li>
+          <li>Implemented JWT and bcrypt authentication with role-based authorization.</li>
+        </ul>
+        <p class="quest-tech">Node.js · Express · REST APIs · JWT · bcrypt · cloud deployment</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ============ SKILLS ============ -->
+  <section class="section" id="skills" aria-labelledby="skills-title">
+    <div class="section-head">
+      <h2 class="mc-h" id="skills-title">Skills</h2>
+      <p class="section-sub">The toolbox, grouped the way I actually use it.</p>
+    </div>
+
+    <div class="skill-rack">
+      <div class="skill-group panel">
+        <h3 class="skill-group-title">Languages</h3>
+        <ul class="chips">
+          <li class="chip">JavaScript</li><li class="chip">TypeScript</li><li class="chip">Python</li><li class="chip">C++</li>
+        </ul>
+      </div>
+      <div class="skill-group panel">
+        <h3 class="skill-group-title">Frontend</h3>
+        <ul class="chips">
+          <li class="chip">React</li><li class="chip">Next.js (App Router)</li><li class="chip">Tailwind CSS</li><li class="chip">HTML</li><li class="chip">CSS</li><li class="chip">PWA</li>
+        </ul>
+      </div>
+      <div class="skill-group panel">
+        <h3 class="skill-group-title">Backend</h3>
+        <ul class="chips">
+          <li class="chip">Node.js</li><li class="chip">Express</li><li class="chip">REST APIs</li><li class="chip">WebSockets</li><li class="chip">JWT</li><li class="chip">bcrypt</li><li class="chip">Authentication</li>
+        </ul>
+      </div>
+      <div class="skill-group panel">
+        <h3 class="skill-group-title">Data</h3>
+        <ul class="chips">
+          <li class="chip">PostgreSQL</li><li class="chip">MySQL</li><li class="chip">MongoDB</li><li class="chip">Redis</li><li class="chip">Prisma ORM</li><li class="chip">Supabase</li>
+        </ul>
+      </div>
+      <div class="skill-group panel">
+        <h3 class="skill-group-title">AI</h3>
+        <ul class="chips">
+          <li class="chip">LLM APIs (Gemini, OpenAI)</li><li class="chip">Prompt engineering</li><li class="chip">AI agents</li><li class="chip">RAG pipelines</li>
+        </ul>
+      </div>
+      <div class="skill-group panel">
+        <h3 class="skill-group-title">Cloud &amp; tooling</h3>
+        <ul class="chips">
+          <li class="chip">AWS EC2</li><li class="chip">Vercel</li><li class="chip">Netlify</li><li class="chip">Docker</li><li class="chip">Git</li><li class="chip">CI/CD</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EDUCATION ============ -->
+  <section class="section" id="education" aria-labelledby="education-title">
+    <div class="section-head">
+      <h2 class="mc-h" id="education-title">Education</h2>
+    </div>
+    <div class="quest panel">
+      <div class="quest-head">
+        <h3 class="quest-title">BTech, Artificial Intelligence</h3>
+        <p class="quest-meta">Technocrats Institute of Technology (TIT), Bhopal &mdash; CGPA: 7.5</p>
+        <p class="quest-date">Aug 2024 &ndash; Feb 2028</p>
+      </div>
+      <p class="quest-tech">Data Structures &amp; Algorithms · DBMS · Operating Systems · Computer Networks</p>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="section section-contact" id="contact" aria-labelledby="contact-title">
+    <div class="section-head">
+      <h2 class="mc-h" id="contact-title">Contact</h2>
+      <p class="section-sub">Available immediately for a software engineering internship.</p>
+    </div>
+    <div class="contact-board panel">
+      <a class="mc-btn mc-btn-primary" href="mailto:vaibhav7290119@gmail.com">vaibhav7290119@gmail.com</a>
+      <ul class="contact-list">
+        <li><a href="https://github.com/Classyvaibhav06">GitHub &mdash; Classyvaibhav06</a></li>
+        <li><a href="https://linkedin.com/in/vaibhav-ghoshi-60467830b">LinkedIn &mdash; vaibhav-ghoshi</a></li>
+        <li><a href="https://vaibhav-ghoshi.in">vaibhav-ghoshi.in</a></li>
+        <li><a href="https://raw.githubusercontent.com/Classyvaibhav06/portfolio/main/resume.pdf">Resume (PDF)</a></li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>Vaibhav Ghoshi &mdash; Bhopal, India. Built by hand, no template.</p>
+</footer>
+
+<div class="hud-band" aria-hidden="true"></div>
+<nav class="hotbar" aria-label="Section navigation">
+  <a class="hotbar-slot" href="#home" data-target="home"><span class="key">1</span><span class="hotbar-icon icon-home" aria-hidden="true"></span><span class="hotbar-label">Home</span></a>
+  <a class="hotbar-slot" href="#projects" data-target="projects"><span class="key">2</span><span class="hotbar-icon icon-chest" aria-hidden="true"></span><span class="hotbar-label">Projects</span></a>
+  <a class="hotbar-slot" href="#experience" data-target="experience"><span class="key">3</span><span class="hotbar-icon icon-sword" aria-hidden="true"></span><span class="hotbar-label">Experience</span></a>
+  <a class="hotbar-slot" href="#skills" data-target="skills"><span class="key">4</span><span class="hotbar-icon icon-pick" aria-hidden="true"></span><span class="hotbar-label">Skills</span></a>
+  <a class="hotbar-slot" href="#education" data-target="education"><span class="key">5</span><span class="hotbar-icon icon-book" aria-hidden="true"></span><span class="hotbar-label">Education</span></a>
+  <a class="hotbar-slot" href="#contact" data-target="contact"><span class="key">6</span><span class="hotbar-icon icon-sign" aria-hidden="true"></span><span class="hotbar-label">Contact</span></a>
+</nav>
+
+<!-- achievement toast, shown once per visitor -->
+<div class="achievement" id="achievement" role="status" aria-live="polite" hidden>
+  <img src="assets/items/paper.svg" width="32" height="32" alt="">
+  <div>
+    <p class="achievement-title">Achievement get!</p>
+    <p class="achievement-text">Portfolio loaded</p>
+  </div>
+</div>
+
+</body>
+</html>
